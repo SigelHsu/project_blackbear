@@ -1,9 +1,9 @@
 <?php
 	//echo json_encode( array("Loc" => "./img/rat.png", "Width" => "50px", "Height" => "50px",) ); exit();
 	$data = array();
-	$countCode = (isset($_GET["code"])) ? ($_GET["code"]) : ("");				//$countNo = 'C000001';	$eventCode = 'voK2xX';
+	$countCode = (isset($_GET["code"])) ? ($_GET["code"]) : ("");					//$countNo = 'C000001';	$eventCode = 'voK2xX';
 	
-	$data["counter"] = fun_getCounterData(array("Code" => $countCode) );	//獲取活動資料		//print_r($data);
+	$data["counter"] 	= fun_getCounterData(array("Code" => $countCode) );	//獲取活動資料		//print_r($data);
 ?>
 
 <!-- Page Heading -->
@@ -67,7 +67,7 @@
 											<input type="text" class="form-control" id="inputFontColor" 	name="input[Setting][Font-Color]" 	value="<?=(isset($data["counter"]["Setting"]["Font-Color"])) 		? ($data["counter"]["Setting"]["Font-Color"]) 	: (""); ?>"	placeholder="文字顏色" data-toggle="tooltip" data-placement="top" title="文字顏色" />
 										</div>
 										<div class="col-md-3">
-											<input type="text" class="form-control" id="inputFontColor" 	name="input[Setting][Font-Shadow]" 	value="<?=(isset($data["counter"]["Setting"]["Font-Shadow"])) 	? ($data["counter"]["Setting"]["Font-Shadow"]) 	: (""); ?>"	placeholder="文字陰影" data-toggle="tooltip" data-placement="top" title="文字顏色" />
+											<input type="text" class="form-control" id="inputFontColor" 	name="input[Setting][Font-Shadow]" 	value="<?=(isset($data["counter"]["Setting"]["Font-Shadow"])) 	? ($data["counter"]["Setting"]["Font-Shadow"]) 	: (""); ?>"	placeholder="文字陰影" data-toggle="tooltip" data-placement="top" title="文字陰影" />
 										</div>
 									</div>
 									<div class="col-12">
@@ -100,20 +100,24 @@
 								<div class="form-group col-12 p-0">
 									<div class="col-12">
 										<input type="hidden" class="form-control ipt_bgChoose" name="input[Setting][Background-Sel]" value="<?=(isset($data["counter"]["Setting"]["Background-Sel"])) ? ($data["counter"]["Setting"]["Background-Sel"]) : (0); ?>" />
-										<label>Background </label>
+										<label>Background</label>
 									</div>
 									<div class="d-flex">
 										<div class="col-md-3">
-											<input type="text" class="form-control" id="inputBGColor" 		name="input[Setting][Background-Color]" 	value="<?=(isset($data["counter"]["Setting"]["Background-Color"])) 	? ($data["counter"]["Setting"]["Background-Color"]) 	: (""); ?>" placeholder="背景顏色" data-toggle="tooltip" data-placement="top" title="背景顏色" />
+											<input type="text" 			class="form-control" id="inputBGColor" 			name="input[Setting][Background-Color]" 	value="<?=(isset($data["counter"]["Setting"]["Background-Color"])) 	? ($data["counter"]["Setting"]["Background-Color"]) 	: (""); ?>" placeholder="背景顏色" data-toggle="tooltip" data-placement="top" title="背景顏色" />
 										</div>
 										<div class="col-md-3">
-											<input type="text" class="form-control" id="inputBGImg" 			name="input[Setting][Background-Img]" 		value="<?=(isset($data["counter"]["Setting"]["Background-Img"])) 		? ($data["counter"]["Setting"]["Background-Img"]) 		: (""); ?>"	placeholder="背景圖片" data-toggle="tooltip" data-placement="top" title="背景圖片" />
+											<input type="text" 			class="form-control" id="inputBGImg" 				name="input[Setting][Background-Img]" 		value="<?=(isset($data["counter"]["Setting"]["Background-Img"])) 		? ($data["counter"]["Setting"]["Background-Img"]) 		: (""); ?>"	placeholder="背景圖片" data-toggle="tooltip" data-placement="top" title="背景圖片" />
 										</div>
-										<div class="col-md-3">
-											<input type="text" class="form-control" id="inputBoardWidth" 	name="input[Setting][Board-Width]" 				value="<?=(isset($data["counter"]["Setting"]["Board-Width"])) 			? ($data["counter"]["Setting"]["Board-Width"]) 				: (""); ?>"	placeholder="背景寬度" data-toggle="tooltip" data-placement="top" title="背景寬度" />
+										<div class="col-md-2 form-check form-check-inline">
+											<input type="checkbox" 	class="btn-check form-check-input" 	 id="inputBoardTrans" 	name="input[Setting][Board-Transparent]" 	value="1" <?=(isset($data["counter"]["Setting"]["Board-Transparent"]) && ($data["counter"]["Setting"]["Board-Transparent"] == 1)) ? ("checked")	: (""); ?>	autocomplete="off"  />
+											<label class="form-check-label" for="inputBoardTrans" >背景透明化</label>
 										</div>
-										<div class="col-md-3">
-											<input type="text" class="form-control" id="inputBoardHeight" name="input[Setting][Board-Height]" 			value="<?=(isset($data["counter"]["Setting"]["Board-Height"])) 			? ($data["counter"]["Setting"]["Board-Height"]) 			: (""); ?>"	placeholder="背景高度" data-toggle="tooltip" data-placement="top" title="背景高度" />
+										<div class="col-md-2">
+											<input type="text" 			class="form-control" id="inputBoardWidth" 	name="input[Setting][Board-Width]" 				value="<?=(isset($data["counter"]["Setting"]["Board-Width"])) 			? ($data["counter"]["Setting"]["Board-Width"]) 				: (""); ?>"	placeholder="背景寬度" data-toggle="tooltip" data-placement="top" title="背景寬度" />
+										</div>
+										<div class="col-md-2">
+											<input type="text" 			class="form-control" id="inputBoardHeight" 	name="input[Setting][Board-Height]" 			value="<?=(isset($data["counter"]["Setting"]["Board-Height"])) 			? ($data["counter"]["Setting"]["Board-Height"]) 			: (""); ?>"	placeholder="背景高度" data-toggle="tooltip" data-placement="top" title="背景高度" />
 										</div>
 									</div>
 								</div>
@@ -133,7 +137,7 @@
 							
 							<div class="row col-12 border-bottom">
 								
-								<div class="form-group col-8 p-0">
+								<div class="form-group col-12 p-0">
 									<div class="col-12">
 										<label>Frequency Setting</label>
 									</div>
@@ -152,14 +156,27 @@
 								
 								<div class="form-group col-4 p-0">
 									<div class="col-12">
-										<label>Update Frequency <i class="fas fa-exclamation-circle" data-toggle="tooltip" data-placement="top" title="更新頻率，請輸入半形數字(0.1為1毫秒)"></i></label>
+										<label>Update Frequency <i class="fas fa-exclamation-circle" data-toggle="tooltip" data-placement="top" title="總更新頻率，每T秒重新抓取資料庫的數值，以更新到上限值，請輸入半形數字(0.1為1毫秒)"></i></label>
 										<input type="text" class="form-control" id="inputFontColor" 	name="input[Setting][Update-Frequency]" value="<?=$data["counter"]["Setting"]["Update-Frequency"]; ?>"	placeholder="更新頻率" data-toggle="tooltip" data-placement="top" title="更新頻率" />
+									</div>
+								</div>
+								
+								<div class="form-group col-8 p-0">
+									<div class="col-12">
+										<label>Jumping Frequency per times (M/N)<i class="fas fa-exclamation-circle" data-toggle="tooltip" data-placement="top" title="跳動頻率，每N秒更新一次，M秒內更新到上限(建議M不要超過總更新頻率)"></i></label>
+									</div>
+									<div class="d-flex">
+										<div class="col-md-6">
+											<input type="text" class="form-control" id="inputFreqNsec" 	name="input[Setting][Duration-Nsec]" 	value="<?=$data["counter"]["Setting"]["Duration-Nsec"]; ?>" 	placeholder="跳動頻率，N秒" 	data-toggle="tooltip" data-placement="top" title="跳動頻率，每N秒跳動一次，請輸入半形數字(0.1為1毫秒，建議1)" />
+										</div>
+										<div class="col-md-6">
+											<input type="text" class="form-control" id="inputFreqMsec" 	name="input[Setting][Duration-Msec]" 	value="<?=$data["counter"]["Setting"]["Duration-Msec"]; ?>"		placeholder="跳動頻率，M秒" 	data-toggle="tooltip" data-placement="top" title="跳動頻率，M秒內要更新到最新數值，請輸入半形數字(0.1為1毫秒，建議不要超過總更新頻率)" />
+										</div>
 									</div>
 								</div>
 							</div>
 							
 							<div class="row col-12 border-bottom">
-								
 								<div class="form-group col-6 p-0">
 									<div class="col-12">
 										<label>Padding <i class="fas fa-exclamation-circle" data-toggle="tooltip" data-placement="top" title="文字留白，單位為px"></i></label>

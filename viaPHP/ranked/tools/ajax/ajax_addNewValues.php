@@ -10,7 +10,7 @@
 		$inputData["Counter_ID"] = $_POST["input"]["ID"];
 		$inputData["Counter_No"] = $_POST["input"]["No"];
 		$inputData["GrabInfo"] = array();
-		$inputData["GrabInfo"]["NewVal"] = $_POST["input"]["GrabInfo"]["Value"]["New"];
+		$inputData["GrabInfo"]["NewVal"] = mb_convert_kana($_POST["input"]["GrabInfo"]["Value"]["New"], 'n');
 		
 		/*
 		foreach($_POST["input"]["GrabInfo"]["ID"] AS $KeyNo => $GrabInfo_ID) {
@@ -22,28 +22,34 @@
 		echo fun_updNewData($inputData);
 	}
 	
-	//獲取活動資料
+	//新增資料
 	function fun_updNewData( $data = array() ) {
 		
-		$Counter_ID = $data["Counter_ID"];
-		$Counter_No = $data["Counter_No"];
-			$sql = "INSERT INTO tb_grabinfo 
-													(
-													 Counter_ID, 
-													 Grab_Values, 
-													 Status, 
-													 Create_Date, 
-													 Modify_Date
-												  )
-									 VALUES (
-														'".$Counter_ID."',
-														'".$data["GrabInfo"]["NewVal"]."',
-														'1',
-														NOW(),
-														NOW()
-													);";
-			//echo $sql."</br>";
-			$result = fun_updDBData($sql);
+		$Counter_ID 		= $data["Counter_ID"];
+		$Counter_No 		= $data["Counter_No"];
+		$GrabInfo_Value = $data["GrabInfo"]["NewVal"];
+		
+		if(!is_numeric($GrabInfo_Value)) {
+			return false;
+		}
+	
+		$sql = "INSERT INTO tb_grabinfo 
+												(
+												 Counter_ID, 
+												 Grab_Values, 
+												 Status, 
+												 Create_Date, 
+												 Modify_Date
+												)
+								 VALUES (
+													'".$Counter_ID."',
+													'".$GrabInfo_Value."',
+													'1',
+													NOW(),
+													NOW()
+												);";
+		//echo $sql."</br>";
+		$result = fun_updDBData($sql);
 		
 		return true;
 	}

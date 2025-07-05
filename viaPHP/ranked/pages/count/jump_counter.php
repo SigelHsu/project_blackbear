@@ -2,7 +2,8 @@
 	$counterCode = (isset($_GET["code"])) ? ($_GET["code"]) : ("");
 	$data["counter"] 	= fun_getCounterData(array("Code" => $counterCode));	//獲取計數器資料
 	$data["setting"] 	= $data["counter"]["Setting"];												//獲取計數器設定
-	
+	$data["grabInfo"] = fun_getGrabInfoData($data["counter"]["ID"]);				//獲取活動玩家資訊
+
 	$set_fontContent = "start";
 	switch($data["setting"]["Font-Content"]) {
 		default:
@@ -16,37 +17,39 @@
 			$set_fontContent = "end";
 			break;
 	}
+	$set_BGTransparent = (isset($data["setting"]["Board-Transparent"]) && ($data["setting"]["Board-Transparent"] == 1)) ? ("d-none") : ("");
+	$set_Frequency = array(
+		"DurStart" 	=> (isset($data["setting"]["Duration-Start"]) 	&& ($data["setting"]["Duration-Start"] 		!= 0)) ? ($data["setting"]["Duration-Start"]) 	: (0.5),
+		"DurPer" 	 	=> (isset($data["setting"]["Duration-Per"]) 		&& ($data["setting"]["Duration-Per"] 			!= 0)) ? ($data["setting"]["Duration-Per"]) 		: (0.1),
+		"DurMax" 	 	=> (isset($data["setting"]["Duration-Max"]) 		&& ($data["setting"]["Duration-Max"] 			!= 0)) ? ($data["setting"]["Duration-Max"]) 		: (1),
+		"FreUpd" 	 	=> (isset($data["setting"]["Update-Frequency"]) && ($data["setting"]["Update-Frequency"] 	!= 0)) ? ($data["setting"]["Update-Frequency"]) : (5),
+		"FreNsec" 	=> (isset($data["setting"]["Duration-Nsec"]) 		&& ($data["setting"]["Duration-Nsec"] 		!= 0)) ? ($data["setting"]["Duration-Nsec"]) 		: (4),
+		"FreMsec" 	=> (isset($data["setting"]["Duration-Msec"]) 		&& ($data["setting"]["Duration-Msec"] 		!= 0)) ? ($data["setting"]["Duration-Msec"]) 		: (1),
+	);
+	$set_GrabInfoMax = (isset($data["grabInfo"][0]["Grab_Values"])) ? ($data["grabInfo"][0]["Grab_Values"]) : (0);			//$set_GrabInfoMax = (0);
+	//print_r($set_GrabInfoMax);
 ?>
 
-<!-- Page Heading -->
-<div class="d-sm-flex align-items-center justify-content-between mb-4 d-none">
-	<h1 class="h3 mb-0 text-gray-800 d-none">Counter</h1>
-</div>
-
-<!-- Content Row -->
-<div class="row d-none">
-
-	<div class="col-xl-12 col-lg-12">
-		<div class="card shadow mb-4">
-		
-			<!-- Card Header - Dropdown -->
-			<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-				<h6 class="m-0 font-weight-bold text-primary">Counter Board</h6>
-			</div>
-			<!-- Card Body -->
-
-		</div>
-	</div>
-	
-</div>
-
+<!-- Card Body -->
 <div class="card-body">
 	<div class="table-area row justify-content-<?=$set_fontContent; ?>">
-		<div id="div_numContainer" class="form-row col-auto"></div>
+		<div id="div_numContainer" class="form-row col-auto">
+			<?php 
+				$set_FormattedNum = number_format($set_GrabInfoMax, 0, '.', ',');
+				$get_NumCharacter = str_split($set_FormattedNum);
+				foreach($get_NumCharacter AS $Key => $Value): 
+			?>
+			<div id="numBox_<?=$Key; ?>" class="div_numBlock"><?=$Value; ?></div>
+			<?php endforeach; ?>
+		</div>
 	</div>
 </div>
 
 <style type="text/css">
+	.css_transparent {
+		background-color: transparent !important;
+	}
+
 	div.card-body {
 		<?php if( isset($data["setting"]["Background-Img"]) ): ?>
 		background-image: url(<?=$data["setting"]["Background-Img"]; ?>);
@@ -131,12 +134,12 @@
 	}
 	@font-face {
 		font-family: 'DFLiSongTC-W5';
-		src: url('/fonts/DFLiSongTC-W5.otf') format('opentype');
+		src: url('./tools/fonts/DFLiSongTC-W5.otf') format('opentype');
 	}
 </style>
 <script>
 	// 設定生成亂數的間隔時間（毫秒）
-	const set_intervalTime = 5 * 1000; // 1000 毫秒 = 1 秒
+	const set_intervalTime = <?=$set_Frequency["FreUpd"]; ?> * 1000; // 1000 毫秒 = 1 秒
 
 	// 定義生成亂數的函數
 	function fun_genRandomNumber() {
@@ -207,7 +210,9 @@
 
 
 	$(document).ready(function() {
-		$("body, div").attr("style", "background-color: transparent !important");
+		<?php if($set_BGTransparent != "") : ?>
+		$("body, div").addClass("css_transparent");
+		<?php endif; ?>
 		$(".sticky-footer").addClass("d-none");
 		$("#btn_top").addClass("d-none");
 		$(".navbar").addClass("d-none");
@@ -218,26 +223,9 @@
 		timerId = setInterval("fun_updateCounterValue();", set_intervalTime);
 	});
 	
-	let ary_sample = {
-		0: {
-			"full": 0000000000, 
-			"indi": {
-				"0" 	: "0",
-				"1" 	: ",",
-				"2" 	: "0",
-				"3" 	: "0",
-				"4" 	: "0",
-				"5" 	: ",",
-				"6" 	: "0",
-				"7" 	: "0",
-				"8" 	: "0",
-				"9" 	: ",",
-				"10" 	: "0",
-				"11" 	: "0",
-				"12" 	: "0",
-			}
-		}
-	};
+	let ary_sample 	= new Array();
+	ary_sample[0] 	= new Array();
+	ary_sample[0]["full"] = <?=$set_GrabInfoMax; ?>;
 	
 	//更新計數器的資料/數值
 	function fun_updateCounterValue() {
@@ -249,16 +237,16 @@
 		ary_sample[get_x] = new Array();
 		ary_sample[get_x]["full"] = (get_ajaxData && get_ajaxData["values"] !== undefined && get_ajaxData["values"] !== null) ? (get_ajaxData["values"]) : (0);
 		ary_sample[get_x]["indi"] = fun_sepratString(ary_sample[get_x]["full"].toLocaleString());			//console.log(ary_sample);
-
 		console.log("x-1: ", ary_sample[get_x-1]["full"], "; x: ", ary_sample[get_x]["full"]);
 		
 		let startValue 			= ary_sample[get_x-1]["full"];
 		let endValue 				= ary_sample[get_x]["full"];
-		let totalDuration 	= 4000; 																															// 總時間 5 秒
-		let updateInterval 	= 1000; 																															// 每次更新間隔 1 秒(這個固定感覺會比較安全)
-		let increment 	= Math.ceil( (endValue - startValue) / (totalDuration / updateInterval)); // 設定增量 = ( (結束-起始) / ( 更新次數 = (總時間 / 更新間隔) ) )
+		let totalDuration 	= <?=$set_Frequency["FreMsec"]; ?> * 1000; 		// 總時間 5 秒
+		let updateInterval 	= <?=$set_Frequency["FreNsec"]; ?> * 1000; 		// 每次更新間隔 1 秒(這個固定感覺會比較安全)
+		let increment 	= Math.ceil( (endValue - startValue) / (totalDuration / updateInterval)); 					// 設定增量 = ( (結束-起始) / ( 更新次數 = (總時間 / 更新間隔) ) )
+		//console.log("totalDuration: ",totalDuration, "; updateInterval: ", updateInterval, "; increment:", increment);
 
-		let currentValue = parseInt(startValue);																									// console.log("startValue: ",startValue, "; endValue: ",endValue, "currentValue: ",currentValue);
+		let currentValue = parseInt(startValue);																														// console.log("startValue: ",startValue, "; endValue: ",endValue, "currentValue: ",currentValue);
 		//開始定時迴圈
 		let interval = setInterval(() => {
 			if (currentValue < endValue) {
@@ -276,8 +264,29 @@
 				for (let key in tmp_indi) {
 					//console.log(key, ": ", tmp_indi[key]);
 					if (key >= findDiffIndex) {
-						let duration = 0.5 + ((getLength - key) * 0.1);			//計算淡出的時間
-						duration = (duration > 1) ? 1 : duration;						//限制最大變化時間
+						let duration = <?=$set_Frequency["DurStart"]; ?> + ((getLength - key) * <?=$set_Frequency["DurPer"]; ?>);			//計算淡出的時間
+						duration = (duration > <?=$set_Frequency["DurMax"]; ?>) ? <?=$set_Frequency["DurMax"]; ?> : duration;					//限制最大變化時間	//console.log("duration: ", duration);
+						updateDivValue("numBox_" + key, tmp_indi[key], duration);
+					}
+				}
+			}
+			else if (currentValue > endValue) {
+				currentValue += increment;
+				if (currentValue < endValue) {
+					currentValue = endValue.toLocaleString(); // 確保不超過最終值
+				}
+				let formattedValue = parseInt(currentValue).toLocaleString();													//格式化字串	//
+				let tmp_indi = fun_sepratString(formattedValue);
+				let findDiffIndex = fun_findFirstDifferenceIndex(formattedValue.toString(), (currentValue - increment).toLocaleString().toString());
+				let getLength = formattedValue.length;
+				//console.log("typeof: ", typeof currentValue, "; currentValue: ", currentValue, "; formattedValue: ",formattedValue, "; tmp_indi: ", tmp_indi);
+				
+				fun_chkDivValues(getLength);		//檢查是否有需要新增 div
+				for (let key in tmp_indi) {
+					//console.log(key, ": ", tmp_indi[key]);
+					if (key >= findDiffIndex) {
+						let duration = <?=$set_Frequency["DurStart"]; ?> + ((getLength - key) * <?=$set_Frequency["DurPer"]; ?>);			//計算淡出的時間
+						duration = (duration > <?=$set_Frequency["DurMax"]; ?>) ? <?=$set_Frequency["DurMax"]; ?> : duration;					//限制最大變化時間	//console.log("duration: ", duration);
 						updateDivValue("numBox_" + key, tmp_indi[key], duration);
 					}
 				}
@@ -287,7 +296,7 @@
 				cre_newDiv.id = "numBox_0"; // 確保 ID 正確
 				cre_newDiv.classList.add('div_numBlock');
 				document.getElementById("div_numContainer").appendChild(cre_newDiv);
-				let duration = 0.5;																	//計算淡出的時間
+				let duration = <?=$set_Frequency["DurStart"]; ?>;																																	//計算淡出的時間
 				updateDivValue("numBox_0", 0, duration);
 			}
 			else {

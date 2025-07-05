@@ -60,34 +60,35 @@
 						<div class="form-row">
 							<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between col-md-12">
 								<h6 class="m-0 font-weight-bold text-primary">Grab Values</h6>
+						
+								<div class="form-row justify-content-end">
+									<button type="button" class="btn btn-primary ml-1" 		onclick="ajax_sendGrabInfoData()" 						>Submit</button>
+									<button type="button" class="btn btn-secondary ml-1" 	onclick="js_resetData()" 											>Reset</button>
+									<button type="button" class="btn btn-secondary ml-1" 	onclick="js_JumpCounter('<?=$countCode;?>')" 	>Show Board</button>
+								</div>
 							</div>
 							
 							<div class="form-row col-md-12">
-								<input type="text" class="form-control col-md-8" name="input[GrabInfo][Value][New]" value="">
+								<input type="text" class="form-control col-md-6" name="input[GrabInfo][Value][New]" value="" placeholder="新增一筆目標數額，請輸入半形數字">
 								<button type="button" onclick="ajax_addNewValues()" class="d-sm-inline-block btn btn-sm btn btn-outline-info shadow-sm">
 									<i class="fas fa-plus fa-sm"></i> Add new Values
 								</button>
 							</div>
 							
-							<?php 
-								foreach($data["grabInfo"] AS $grabInfo_Key => $grabInfo_Value) :
-							?>
-							<div class="card-header py-3 d-flex flex-row align-items-center col-md-12">
+							<div class="card-header py-3 col-md-12">
+								<?php 
+									foreach($data["grabInfo"] AS $grabInfo_Key => $grabInfo_Value) :
+								?>
 								<div class="form-group col-md-12 form-row">
-									<label>GrabInfo <?=$grabInfo_Key; ?>: </label>
-									<input type="text" class="form-control col-md-4" name="input[GrabInfo][Value][]" value="<?=$grabInfo_Value["Grab_Values"]; ?>">
-									<input type="hidden" 	name="input[GrabInfo][ID][]" value="<?=$grabInfo_Value["GrabInfo_ID"]; ?>">
+									<label class="col-sm-2 col-form-label">GrabInfo <?=$grabInfo_Key; ?>: </label>
+									<input type="text" 		name="input[GrabInfo][Value][]" value="<?=$grabInfo_Value["Grab_Values"]; ?>" class="form-control col-md-4" >
+									<input type="hidden" 	name="input[GrabInfo][ID][]" 		value="<?=$grabInfo_Value["GrabInfo_ID"]; ?>">
 								</div>
+								<?php 
+									endforeach;
+								?>
 							</div>
-							<?php 
-								endforeach;
-							?>
-						</div>
-						
-						<div class="form-row justify-content-end">
-							<button type="button" onclick="ajax_sendGrabInfoData()" 				class="btn btn-primary ml-1">Submit</button>
-							<button type="button" onclick="js_resetData()" 									class="btn btn-secondary ml-1">Reset</button>
-							<button type="button" onclick="js_ScoreBoard(<?=$countCode;?>)" class="btn btn-secondary ml-1">Show Board</button>
+							
 						</div>
 					</form>
 				</div>

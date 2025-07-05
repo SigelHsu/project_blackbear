@@ -114,3 +114,24 @@ function ajax_addNewValues() {
     }
   });
 }
+
+function ajax_sendGrabInfoData() {
+	let rspData = [];
+	var datas = $("form").serializeArray();
+	$.ajax({
+    type: "POST",
+    url: "./tools/ajax/ajax_updGrabValues.php",
+    dataType: "JSON",
+    data: datas,
+		async: false,
+    success: function (response) {
+			console.log("success", response);	//console.log(response);
+			rspData = response;
+			alert("新增/修改成功");
+			location.reload();
+    },
+    error: function (thrownError) {
+      console.log("thrownError ", thrownError);
+    }
+  });
+}

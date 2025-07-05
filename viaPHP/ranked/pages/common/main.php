@@ -4,12 +4,9 @@
 		$getLoc = ( isset($_REQUEST["loc"]) ) ? ($_REQUEST["loc"]) : ("");
 		$navigate_url = "";
 		switch($getLoc) {
+			default:
 			case "main":
 				$navigate_url = "./pages/dashboard.php";
-				break;
-			default:
-			case "product": 
-				$navigate_url = "./pages/product.php";
 				break;
 			case "listEvent": 
 				$navigate_url = "./pages/event/event_list.php";
