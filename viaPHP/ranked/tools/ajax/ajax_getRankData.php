@@ -1,198 +1,32 @@
 <?php
-	$data["event"] = array(
-		"No" => "E000001",
-		"Title" => "盧實戰技",
-	);
-	$data["rules"] = array(
-		0 => array(
-			"Tag" 	=> "Score",
-			"Image" => "./img/blood.png",
-			"Asc" 	=> 1
-		),
-		1 => array(
-			"Tag" 	=> "Star",
-			"Image" => "./img/star.png",
-			"Asc" 	=> 1
-		),
-		2 => array(
-			"Tag" 	=> "Cards",
-			"Image" => "./img/card-game.png",
-			"Asc" 	=> 1
-		),
-	);
-	$data["players"] = array(
-		0 => array(
-			"ID" 			=> "P01",
-			"Name" 		=> "Rat",
-			"Image" 	=> "./img/rat.png",
-			"ForRank" => array(
-				"Score" => 30,
-				"Star" 	=> 3,
-				"Cards" => 2,
-			),
-		),
-		1 => array(
-			"ID" 			=> "P02",
-			"Name" 		=> "Cow",
-			"Image" 	=> "./img/cow.png",
-			"ForRank" => array(
-				"Score" => 25,
-				"Star" 	=> 3,
-				"Cards" => 2,
-			),
-		),
-		2 => array(
-			"ID" 			=> "P03",
-			"Name" 		=> "Tiger",
-			"Image" 	=> "./img/tiger.png",
-			"ForRank" => array(
-				"Score" => 20,
-				"Star" 	=> 3,
-				"Cards" => 2,
-			),
-		),
-		3 => array(
-			"ID" 			=> "P04",
-			"Name" 		=> "Rabbit",
-			"Image" 	=> "./img/rabbit.png",
-			"ForRank" => array(
-				"Score" => 15,
-				"Star" 	=> 3,
-				"Cards" => 2,
-			),
-		),
-		4 => array(
-			"ID" 			=> "P05",
-			"Name" 		=> "Dragon",
-			"Image" 	=> "./img/dragon.png",
-			"ForRank" => array(
-				"Score" => 10,
-				"Star" 	=> 3,
-				"Cards" => 2,
-			),
-		),
-		5 => array(
-			"ID" 			=> "P06",
-			"Name" 		=> "Snake",
-			"Image" 	=> "./img/snake.png",
-			"ForRank" => array(
-				"Score" => 5,
-				"Star" 	=> 3,
-				"Cards" => 2,
-			),
-		),
-		6 => array(
-			"ID" 			=> "P07",
-			"Name" 		=> "Hoses",
-			"Image" 	=> "./img/horse.png",
-			"ForRank" => array(
-				"Score" => 0,
-				"Star" 	=> 3,
-				"Cards" => 2,
-			),
-		),
-	);
-?>
-function ajax_getRankData () {
-	return $.parseJSON('<?=json_encode($data); ?>');
-}
+	require_once("../../tools/php/tools_dbconnect.php");
+	require_once("../../tools/php/tools_dbtools.php");
 
-
-<?php
-	$data["event"] = array(
-		"No" => "E000001",
-		"Title" => "盧實戰技",
-	);
-	$data["rules"] = array(
-		0 => array(
-			"Tag" 	=> "Score",
-			"Image" => "./img/blood.png",
-			"Asc" 	=> 1
-		),
-		1 => array(
-			"Tag" 	=> "Star",
-			"Image" => "./img/star.png",
-			"Asc" 	=> 1
-		),
-		2 => array(
-			"Tag" 	=> "Cards",
-			"Image" => "./img/card-game.png",
-			"Asc" 	=> 1
-		),
-	);
-	$data["players"] = array(
-		0 => array(
-			"ID" 			=> "P01",
-			"Name" 		=> "Rat",
-			"Image" 	=> "./img/rat.png",
-			"ForRank" => array(
-				"Score" => 30,
-				"Star" 	=> 3,
-				"Cards" => 2,
-			),
-		),
-		1 => array(
-			"ID" 			=> "P02",
-			"Name" 		=> "Cow",
-			"Image" 	=> "./img/cow.png",
-			"ForRank" => array(
-				"Score" => 15,
-				"Star" 	=> 3,
-				"Cards" => 2,
-			),
-		),
-		2 => array(
-			"ID" 			=> "P03",
-			"Name" 		=> "Tiger",
-			"Image" 	=> "./img/tiger.png",
-			"ForRank" => array(
-				"Score" => 20,
-				"Star" 	=> 3,
-				"Cards" => 2,
-			),
-		),
-		3 => array(
-			"ID" 			=> "P04",
-			"Name" 		=> "Rabbit",
-			"Image" 	=> "./img/rabbit.png",
-			"ForRank" => array(
-				"Score" => 15,
-				"Star" 	=> 3,
-				"Cards" => 2,
-			),
-		),
-		4 => array(
-			"ID" 			=> "P05",
-			"Name" 		=> "Dragon",
-			"Image" 	=> "./img/dragon.png",
-			"ForRank" => array(
-				"Score" => 40,
-				"Star" 	=> 3,
-				"Cards" => 2,
-			),
-		),
-		5 => array(
-			"ID" 			=> "P06",
-			"Name" 		=> "Snake",
-			"Image" 	=> "./img/snake.png",
-			"ForRank" => array(
-				"Score" => 5,
-				"Star" 	=> 3,
-				"Cards" => 2,
-			),
-		),
-		6 => array(
-			"ID" 			=> "P07",
-			"Name" 		=> "Hoses",
-			"Image" 	=> "./img/horse.png",
-			"ForRank" => array(
-				"Score" => 60,
-				"Star" 	=> 3,
-				"Cards" => 2,
-			),
-		),
-	);
+	$data = array();
+	
+	$data["event"] 		= fun_getEventData('E000001');										//獲取活動資料
+	$data["rules"] 		= fun_getEventRuleData($data["event"]["ID"]);			//獲取活動排序規則
+	$data["players"] 	= fun_getEventPlayerData($data["event"]["ID"]);		//獲取活動玩家資訊
+	
+	echo json_encode($data);
+	exit();
+	
+	/*
+		{
+			"event":	
+				{"ID":"1","No":"E000001","Title":"\u76e7\u5be6\u6230\u6280","Img":"","Status":"1"},
+			"rules":[
+				{"Rule_ID":"1","Event_ID":"1","Tag":"Score","Image":".\/img\/blood.png","Asc":"1","Order":"1","Status":"1"},
+				{"Rule_ID":"2","Event_ID":"1","Tag":"Star","Image":".\/img\/star.png","Asc":"1","Order":"2","Status":"1"},
+				{"Rule_ID":"3","Event_ID":"1","Tag":"Cards","Image":".\/img\/card-game.png","Asc":"1","Order":"3","Status":"1"}
+				],
+		  "players":[
+				{"Ranked_ID":"1","Event_ID":"1","ID":"1","No":"P00001","Name":"Rat","Image":".\/img\/rat.png","ForRank":{"Score":30,"Star":3,"Cards":2},"Player_Status":"1","Ranked_Status":"1"},
+				{"Ranked_ID":"2","Event_ID":"1","ID":"2","No":"P00002","Name":"Cow","Image":".\/img\/cow.png","ForRank":{"Score":60,"Star":3,"Cards":2},"Player_Status":"1","Ranked_Status":"1"},
+				{"Ranked_ID":"3","Event_ID":"1","ID":"3","No":"P00003","Name":"Tiger","Image":".\/img\/tiger.png","ForRank":{"Score":30,"Star":3,"Cards":2},"Player_Status":"1","Ranked_Status":"1"},
+				{"Ranked_ID":"4","Event_ID":"1","ID":"4","No":"P00004","Name":"Rabbit","Image":".\/img\/rabbit.png","ForRank":{"Score":30,"Star":3,"Cards":2},"Player_Status":"1","Ranked_Status":"1"},
+				{"Ranked_ID":"5","Event_ID":"1","ID":"5","No":"P00005","Name":"Dragon","Image":".\/img\/dragon.png","ForRank":{"Score":30,"Star":3,"Cards":2},"Player_Status":"1","Ranked_Status":"1"},
+				{"Ranked_ID":"6","Event_ID":"1","ID":"6","No":"P00006","Name":"Snake","Image":".\/img\/snake.png","ForRank":{"Score":30,"Star":3,"Cards":2},"Player_Status":"1","Ranked_Status":"1"},
+				{"Ranked_ID":"7","Event_ID":"1","ID":"7","No":"P00007","Name":"Hoses","Image":".\/img\/horse.png","ForRank":{"Score":30,"Star":3,"Cards":2},"Player_Status":"1","Ranked_Status":"1"}]}
+	*/
 ?>
-function ajax_getRankDataNew () {
-	return $.parseJSON('<?=json_encode($data); ?>');
-}

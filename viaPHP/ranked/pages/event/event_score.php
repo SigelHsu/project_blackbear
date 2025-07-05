@@ -1,4 +1,14 @@
-<?php require_once("../../tools/ajax/ajax_getRankData.php"); ?>
+<?php
+	//echo json_encode( array("Loc" => "./img/rat.png", "Width" => "50px", "Height" => "50px",) ); exit();
+	$data = array();
+	
+	$data["event"] 		= fun_getEventData('E000001');										//獲取活動資料
+	$data["rules"] 		= fun_getEventRuleData($data["event"]["ID"]);			//獲取活動排序規則
+	$data["players"] 	= fun_getEventPlayerData($data["event"]["ID"]);		//獲取活動玩家資訊
+	
+	//print_r($data["players"]);	//exit();
+	
+?>
 
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -24,6 +34,8 @@
 							<div class="form-group col-md-6">
 								<label for="inputNo">Event No</label>
 								<input type="text" class="form-control" id="inputNo" name="input[No]" value="<?php echo $data["event"]["No"]; ?>" placeholder="No" disabled>
+								<input type="hidden" name="input[ID]" value = "<?php echo $data["event"]["ID"]; ?>">
+								<input type="hidden" name="input[No]" value = "<?php echo $data["event"]["No"]; ?>">
 							</div>
 							<div class="form-group col-md-6">
 								<label for="inputTitle">Event Title</label>
@@ -65,8 +77,8 @@
 									<input type="text" class="form-control" name="input[RankRule][Tag][]" value="<?php echo $Values["Tag"]; ?>" placeholder="1234 Main St">
 								</div>
 								<div class="form-group col-md-6">
-									<label for="inputBGWidth">Width Size</label>
-									<input type="text" class="form-control" id="inputBGWidth" name="input[BG_IMG][Width][]" value="<?php echo $Values["Asc"]; ?>" placeholder="Apartment, studio, or floor">
+									<label for="inputBGWidth">Asc</label>
+									<input type="text" class="form-control" id="inputBGWidth" name="input[RankRule][Asc][]" value="<?php echo $Values["Asc"]; ?>" placeholder="Apartment, studio, or floor">
 								</div>
 							</div>
 							<?php
@@ -94,6 +106,8 @@
 									<img class="playerImg" src="<?=$player_Value["Image"]; ?>" alt="<?=$player_Value["Name"]; ?>">
 									<input type="text" class="form-control" name="input[Player][Name][]" 	value = "<?=$player_Value["Name"]; ?>" 	placeholder="Name" 	disabled />
 									<input type="text" class="form-control d-none" name="input[Player][Image][]" value = "<?=$player_Value["Image"]; ?>" placeholder="Image" disabled />
+									<input type="hidden" name="input[Player][Ranked_ID][]" value="<?=$player_Value["Ranked_ID"]; ?>">
+									<input type="hidden" name="input[Player][ID][]" value="<?=$player_Value["ID"]; ?>">
 								</div>
 								
 								<?php 
@@ -114,9 +128,9 @@
 						</div>
 						
 						<div class="form-row justify-content-end">
-							<button type="button" onclick="ajax_sendScoreData()" class="btn btn-primary ml-1">Submit</button>
-							<button type="button" onclick="fun_resetData()" 		class="btn btn-secondary ml-1">Reset</button>
-							<button type="button" onclick="ajax_previewScoreBoard()" class="btn btn-secondary ml-1">Preview</button>
+							<button type="button" onclick="ajax_sendScoreData()" 	class="btn btn-primary ml-1">Submit</button>
+							<button type="button" onclick="fun_resetData()" 			class="btn btn-secondary ml-1">Reset</button>
+							<button type="button" onclick="fun_ScoreBoard()" 			class="btn btn-secondary ml-1">Show Board</button>
 						</div>
 					</form>
 				</div>
@@ -133,3 +147,4 @@
 		text-align: center;
 	}
 </style>
+<script><?php include_once("./tools/js/js_rank_controlTools.php"); ?></script>

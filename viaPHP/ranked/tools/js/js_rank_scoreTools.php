@@ -1,12 +1,18 @@
 let data_Rank;
 let timerId;
 let scoreToWin = 2000;
-let updateInterval = 2000;
+let updateInterval = 10000;
+
+//昇冪排序	//最原始 function ascension(a, b) 	{ return ( a.ForRank.Score > b.ForRank.Score ? 1 : -1); }
+//function ascension(a, b) 	{ return (a.ForRank.Score == b.ForRank.Score && a.ForRank.Star > b.ForRank.Star) ? 1 : ( a.ForRank.Score > b.ForRank.Score ? 1 : -1); }
+//降冪排序	//最原始 function descending(a, b) 	{ return ( a.ForRank.Score < b.ForRank.Score ? 1 : -1); }
+//function descending(a, b) { return (a.ForRank.Score == b.ForRank.Score && a.ForRank.Star < b.ForRank.Star) ? 1 : ( a.ForRank.Score < b.ForRank.Score ? 1 : -1); }
 
 //昇冪排序
-function ascension(a, b) 	{ return (a.ForRank.Score == b.ForRank.Score && a.ForRank.Star > b.ForRank.Star) ? 1 : ( a.ForRank.Score > b.ForRank.Score ? 1 : -1); }
+function ascension(a, b) 	{ return (a.ForRank.Score == b.ForRank.Score) ? 0 : ( a.ForRank.Score > b.ForRank.Score ? 1 : -1); }
 //降冪排序，以 score先排序，然後是 star
-function descending(a, b) { return (a.ForRank.Score == b.ForRank.Score && a.ForRank.Star < b.ForRank.Star) ? 1 : ( a.ForRank.Score < b.ForRank.Score ? 1 : -1); }
+function descending(a, b) { return (a.ForRank.Score == b.ForRank.Score) ? 0 : ( a.ForRank.Score < b.ForRank.Score ? 1 : -1); }
+
 
 //調整相對高度...y為標題欄位的高度。(這邊應該可以調整，除了標題以外，還有各個欄位的高度)
 function reposition(data) {
@@ -28,7 +34,7 @@ function getPlayerIndex(key) {
 }
 //更新排名版
 function updateBoard() {
-	let data_newRank 	= ajax_getRankDataNew(), 
+	let data_newRank 	= ajax_getRankData(), 
 			forRankData 	= data_Rank["rules"], 
 			oldPlayers 		= data_Rank["players"]
 			newPlayers 		= data_newRank["players"];
@@ -69,10 +75,11 @@ function resetBoard() {
 		clearInterval(timerId);
 	}
 	
-	data_Rank = ajax_getRankData();
+	data_Rank = ajax_getRankData();			//console.log("data_Rank ", data_Rank);
 	
-	let forRankData = data_Rank["rules"], 
+	let forRankData = data_Rank["rules"], 							
 			data_Players = data_Rank["players"];						//console.log(data_Players.length, data_Players);
+			
 	for(let i = 0; i < data_Players.length; i++) {
 		let tmpData = data_Players[i], tempString = "";		//console.log(i, tmpData);
 		
@@ -106,6 +113,44 @@ function resetBoard() {
 	reposition(data_Players);
 }
 
+
+function ajax_getRankData () {
+	let rspData = [];
+	console.log("ajax_getRankData");
+	$.ajax({
+    type: "POST",
+    url: "./tools/ajax/ajax_getRankData.php",
+    dataType: "json",
+		async: false,
+    success: function (response) {
+			console.log("success", typeof response);
+			rspData = response;
+    },
+    error: function (thrownError) {
+      console.log(thrownError);
+    }
+  });
+	return rspData;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*------------------------------------------------------------*/
 /*這四個 function後續就用不到了*/
 //判斷比賽是否結束
 function isGameOver(score) {

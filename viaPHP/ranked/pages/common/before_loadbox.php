@@ -7,6 +7,10 @@
 
 <title>Sigel Template</title>
 
+<?php
+	require_once("./tools/php/tools_dbconnect.php");
+	require_once("./tools/php/tools_dbtools.php");
+?>
 <!-- Custom fonts for this template-->
 <link href = "./tools/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 <link href = "./tools/css/font-family.css" rel="stylesheet">
