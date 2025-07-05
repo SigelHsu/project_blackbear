@@ -116,7 +116,7 @@ function ajax_addNewSubtitles() {
 			//location.reload();
 			
 			fun_showToastMessage({toastMsg: "Added: " + tmp_subInfo});
-			js_pushupSubtitleData(2);								//抓取最後的資料
+			js_pushupSubtitleData(4);								//抓取最後的資料
 			//這邊還要把 CKeditor裡面的文字清空
 			if (CKEDITOR.instances.ipt_editor_New) {
 				CKEDITOR.instances.ipt_editor_New.setData('');

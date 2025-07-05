@@ -92,6 +92,8 @@
 		height: <?=(isset($data["setting"]["Board-Height"])) 	? ($data["setting"]["Board-Height"]."px") 	: ("auto"); ?>;
 	}
 	div.div_subtitleBlock {
+
+font-weight: 500;
 		<?php if( isset($data["setting"]["Background-Color"]) && ( $data["setting"]["Background-Color"] != "" ) ): ?>
 		background-color: <?=$data["setting"]["Background-Color"]; ?>;
 		<?php endif; ?>
