@@ -39,6 +39,25 @@
 			case "jumpCount":
 				$navigate_url = "./pages/count/jump_counter.php";
 				break;
+				
+			case "listCaption":
+				$navigate_url = "./pages/caption/caption_list.php";
+				break;
+			case "newCaption":
+				$navigate_url = "./pages/caption/caption_create.php";
+				break;
+			case "editCaption":
+				$navigate_url = "./pages/caption/caption_edit.php";
+				break;
+			case "showCaption":
+				$navigate_url = "./pages/caption/show_caption.php";
+				break;
+			case "subtitleList":
+				$navigate_url = "./pages/caption/caption_subtitle.php";
+				break;
+			case "pubSubtitle":
+				$navigate_url = "./pages/caption/public_subtitle.php";
+				break;
 		}
 		
 		require_once($navigate_url); 

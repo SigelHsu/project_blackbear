@@ -1,0 +1,58 @@
+1. 建立資料表
+
+	--tb_caption 管理字幕組基本資訊/設定的列表--
+	CREATE TABLE `db_ranking`.`tb_caption` 
+		(`Caption_ID` INT NOT NULL AUTO_INCREMENT , 
+		 `Caption_No` TEXT NOT NULL , 
+		 `Caption_Code` TEXT NOT NULL , 
+		 `Caption_Title` TEXT NULL , 
+		 `Setting` TEXT NULL , 
+		 `Status` INT NOT NULL , 
+		 `Create_Date` DATETIME NOT NULL , 
+		 `Modify_Date` DATETIME NOT NULL , PRIMARY KEY (`Caption_ID`)) 
+  ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
+
+	--tb_subtitles 管理字幕每句話，以及新增/修改/發布的狀態和時間
+	CREATE TABLE `db_ranking`.`tb_subtitles` 
+		(`Subtitle_ID` INT NOT NULL AUTO_INCREMENT , 
+		 `Caption_ID` INT NOT NULL , 
+		 `Subtitle_Order` INT NOT NULL , 
+		 `Time_Tag` TEXT NULL , 
+		 `Subtitle_Info` TEXT NULL , 
+		 `Other_Info` TEXT NULL COMMENT ' tb_subtitle.Other_Info => {\r\n \'create\' => {\r\n 0 => {\r\n \'id\' => \'0\',\r\n \'user\' => \'Blackbear\',\r\n \'time\' => \'202412081212\',\r\n \'info\' => \'文字串\'\r\n }\r\n },\r\n \'modify\' => {\r\n 0 => {\r\n \'id\' => \'1\',\r\n \'user\' => \'Bigbird\',\r\n \'time\' => \'202412081212\',\r\n \'info\' => \'文字串\'\r\n }\r\n },\r\n \'publish\' => {\r\n 0 => {\r\n \'id\' => \'2\',\r\n \'user\' => \'Littleone\',\r\n \'time\' => \'202412081212\',\r\n \'info\' => \'文字串\'\r\n }\r\n }\r\n }' , 
+		 `Status` INT NOT NULL , 
+		 `Create_Date` DATETIME NOT NULL , 
+		 `Modify_Date` DATETIME NOT NULL , PRIMARY KEY (`Subtitle_ID`)) 
+	 ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
+	
+	ALTER TABLE `tb_subtitles` ADD `Publish_Order` INT NOT NULL AFTER `Subtitle_Order`;
+		#這個主要用來針對當點選發佈時，調整實際應當的順序
+
+
+
+		tb_subtitle.Other_Info => {
+			'create' => {
+				0 => {
+					'id' 	 => '0',
+					'user' => 'Blackbear',
+					'time' => '202412081212',
+					'info' => '文字串'
+				}
+			},
+			'modify' => {
+				0 => {
+					'id' 	 => '1',
+					'user' => 'Bigbird',
+					'time' => '202412081212',
+					'info' => '文字串'
+				}
+			},
+			'publish' => {
+				0 => {
+					'id' 	 => '2',
+					'user' => 'Littleone',
+					'time' => '202412081212',
+					'info' => '文字串'
+				}
+			}
+		}

@@ -62,5 +62,13 @@
 			<span>跳號 Counters</span>
 		</a>
 	</li>
+
+	<!-- Nav Item - Pages Collapse Menu -->
+	<li class="nav-item">
+		<a class="nav-link collapsed" href="./index.php?loc=listCaption" >
+			<i class="fas fa-closed-captioning"></i>
+			<span>字幕 Caption</span>
+		</a>
+	</li>
 </ul>
 <!-- End of Sidebar -->

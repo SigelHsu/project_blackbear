@@ -129,6 +129,8 @@
 		return $returnData;
 	}
 
+?>
+<?php
 	//獲取計數器資料
 	function fun_getCountersData($arySch = array()) {
 		$Counter_ID 	= (isset($arySch["ID"])) 		? ($arySch["ID"]) 	: ("");
@@ -186,6 +188,7 @@
 		}
 		return $returnData;
 	}
+
 	//獲取紀錄的計數器資訊
 	function fun_getGrabInfoData($Counter_ID = "") {
 		$returnData = array();
@@ -212,6 +215,146 @@
 					"Status" 				=> $Values["Status"],
 					"Create_Date"		=> $Values["Create_Date"],
 					"Modify_Date"		=> $Values["Modify_Date"]
+				);
+			}
+		}
+		return $returnData;
+	}
+?>
+<?php
+	//獲取字幕組資料
+	function fun_getCaptionsData($arySch = array()) {
+		
+		$Caption_ID 	= (isset($arySch["ID"])) 		? ($arySch["ID"]) 	: ("");
+		$Caption_No 	= (isset($arySch["No"])) 		? ($arySch["No"]) 	: ("");
+		$Caption_Code = (isset($arySch["Code"])) 	? ($arySch["Code"]) : ("");
+
+		$returnData = array();
+		$sql = "SELECT Caption_ID 		AS Caption_ID, 
+									 Caption_No 		AS Caption_No, 
+									 Caption_Code 	AS Caption_Code, 
+									 Caption_Title 	AS Caption_Title,
+									 Setting 				AS Setting,
+									 Status 				AS Status,
+									 Create_Date 		AS Create_Date,
+									 Modify_Date 		AS Modify_Date
+							FROM tb_caption ";
+		$result = fun_getDBData($sql);
+		return $result;
+	}
+	
+	//獲取單一計數器資料
+	function fun_getCaptionData($arySch = array()) {
+		$Caption_ID 	= (isset($arySch["ID"])) 		? ($arySch["ID"]) 	: ("");
+		$Caption_No 	= (isset($arySch["No"])) 		? ($arySch["No"]) 	: ("");
+		$Caption_Code = (isset($arySch["Code"])) 	? ($arySch["Code"]) : ("");
+		$returnData = array();
+		$sql = "SELECT Caption_ID 		AS Caption_ID, 
+									 Caption_No 		AS Caption_No, 
+									 Caption_Code 	AS Caption_Code, 
+									 Caption_Title 	AS Caption_Title,
+									 Setting 				AS Setting,
+									 Status 				AS Status,
+									 Create_Date 		AS Create_Date,
+									 Modify_Date 		AS Modify_Date
+							FROM tb_caption 
+						 WHERE ( Caption_No 	= '".$Caption_No."' 
+									OR Caption_Code = '".$Caption_Code."'
+								 ) ";
+		$result = fun_getDBData($sql);
+		if( count($result) > 0) {
+			$getData = $result[0];
+			$returnData = array( 
+				"ID" 							=> $getData["Caption_ID"],
+				"No" 							=> $getData["Caption_No"],
+				"Code" 						=> $getData["Caption_Code"],
+				"Title" 					=> $getData["Caption_Title"],
+				"Setting"					=> json_decode($getData["Setting"], true),
+				"Status"					=> $getData["Status"],
+			);
+		}
+		return $returnData;
+	}
+
+	//獲取字幕組的字幕資訊
+	function fun_getSubtitlesData($arySch = array()) {
+		
+		// 處理搜尋字串
+		{
+			$sql_schCaptID 			 = "";
+			if ( isset($arySch["Caption_ID"]) ) {
+				$sql_schCaptID 		.= " AND tb_subtitles.Caption_ID = '".$arySch["Caption_ID"]."'";
+			}
+			
+			$sql_schSubtID 			 = "";
+			if ( isset($arySch["Subtitle_ID"]) ) {
+				$sql_schSubtID 		.= " AND tb_subtitles.Subtitle_ID = '".$arySch["Subtitle_ID"]."'";
+			}
+			
+			$sql_schSubState 		 = "";
+			if ( isset($arySch["Subtitle_Status"]) ) {
+				$sql_schSubState 	.= " AND tb_subtitles.Status >= '".$arySch["Subtitle_Status"]."'";
+			}
+			if ( isset($arySch["Subtitle_StatusR"]) ) {
+				$sql_schSubState 	.= " AND tb_subtitles.Status < '".$arySch["Subtitle_StatusR"]."'";
+			}
+			
+			$sql_schSubListOrder 		= " ORDER BY Publish_Order ASC, Subtitle_Order ASC, Subtitle_ID ASC";
+			if ( isset($arySch["Subtitle_LsitOrder"]) ) {
+				switch($arySch["Subtitle_LsitOrder"]){
+					default:
+					case 1:
+						{
+							$sql_schSubListOrder 	= " ORDER BY Publish_Order ASC, Subtitle_Order ASC, Subtitle_ID ASC";
+						}
+						break;
+					case 2:
+						{
+							$sql_schSubListOrder 	= " ORDER BY Publish_Order DESC, Subtitle_Order DESC, Subtitle_ID DESC";
+						}
+						break;
+					case 3:
+						{
+							$sql_schSubListOrder 	= " ORDER BY Subtitle_ID DESC, Subtitle_Order DESC, Publish_Order DESC";
+						}
+						break;
+				}
+				
+			}
+		}
+		
+		$returnData = array();
+		$sql = "SELECT tb_subtitles.Subtitle_ID 		AS Subtitle_ID, 
+									 tb_subtitles.Caption_ID 			AS Caption_ID,
+									 tb_subtitles.Subtitle_Order 	AS Subtitle_Order,
+									 tb_subtitles.Publish_Order 	AS Publish_Order,
+									 tb_subtitles.Time_Tag 				AS Time_Tag,
+									 tb_subtitles.Subtitle_Info 	AS Subtitle_Info,
+									 tb_subtitles.Other_Info 			AS Other_Info,
+									 tb_subtitles.Status 					AS Status, 
+									 tb_subtitles.Create_Date 		AS Create_Date,
+									 tb_subtitles.Modify_Date 		AS Modify_Date
+							FROM tb_subtitles
+						 WHERE 1 
+									 ".$sql_schCaptID."
+									 ".$sql_schSubtID."
+									 ".$sql_schSubState."
+									 ".$sql_schSubListOrder." ";		// print_r($sql);
+		$result = fun_getDBData($sql);		//print_r($result); exit();
+		
+		if( count($result) > 0) {
+			foreach($result AS $Key => $Values) {
+				
+				$returnData[$Key] = array( 
+					"Subtitle_ID" 		=> $Values["Subtitle_ID"],
+					"Caption_ID" 			=> $Values["Caption_ID"],
+					"Subtitle_Order" 	=> $Values["Subtitle_Order"],
+					"Time_Tag" 				=> $Values["Time_Tag"],
+					"Subtitle_Info" 	=> htmlspecialchars_decode($Values["Subtitle_Info"]),
+					"Other_Info" 			=> $Values["Other_Info"],					//json_decode($Values["Other_Info"], true)
+					"Status" 					=> $Values["Status"],
+					"Create_Date"			=> $Values["Create_Date"],
+					"Modify_Date"			=> $Values["Modify_Date"]
 				);
 			}
 		}

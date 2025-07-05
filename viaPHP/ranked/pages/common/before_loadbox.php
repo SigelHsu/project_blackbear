@@ -14,6 +14,9 @@
 	require_once("./tools/php/tools_common.php");
 ?>
 <!-- Custom fonts for this template-->
+
+<link href = "./tools/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">	-->
 <link href = "./tools/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 <link href = "./tools/css/font-family.css" rel="stylesheet">
 
@@ -22,7 +25,10 @@
 
 <!-- Bootstrap core JavaScript-->
 <script src = "./tools/vendor/jquery/jquery.min.js"></script>
+<script src = "./tools/vendor/jquery-ui/jquery-ui.min.js"></script>
 <script src = "./tools/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src = "./tools/vendor/ckeditor/ckeditor.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script> -->
 
 <!-- Core plugin JavaScript-->
 <script src = "./tools/vendor/jquery-easing/jquery.easing.min.js"></script>

@@ -45,6 +45,8 @@
 		<a id="btn_top" class="scroll-to-top rounded" href="#page-top">
 			<i class="fas fa-angle-up"></i>
 		</a>
+		
+		<?php include_once("./pages/common/toast.php");	//掛載 toast的頁面 ?>
 
 	</body>
 
