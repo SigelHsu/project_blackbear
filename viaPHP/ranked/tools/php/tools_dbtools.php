@@ -318,6 +318,11 @@
 							$sql_schSubListOrder 	= " ORDER BY Subtitle_ID DESC, Subtitle_Order DESC, Publish_Order DESC";
 						}
 						break;
+					case 4:
+						{
+							$sql_schSubListOrder 	= " ORDER BY Modify_Date DESC, Subtitle_ID DESC, Subtitle_Order DESC, Publish_Order DESC";
+						}
+						break;
 				}
 				
 			}
@@ -349,6 +354,7 @@
 					"Subtitle_ID" 		=> $Values["Subtitle_ID"],
 					"Caption_ID" 			=> $Values["Caption_ID"],
 					"Subtitle_Order" 	=> $Values["Subtitle_Order"],
+					"Publish_Order" 	=> $Values["Publish_Order"],
 					"Time_Tag" 				=> $Values["Time_Tag"],
 					"Subtitle_Info" 	=> htmlspecialchars_decode($Values["Subtitle_Info"]),
 					"Other_Info" 			=> $Values["Other_Info"],					//json_decode($Values["Other_Info"], true)

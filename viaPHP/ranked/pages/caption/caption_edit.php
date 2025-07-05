@@ -60,9 +60,9 @@
 										<input type="text" class="form-control" id="inputFontColor" 	name="input[Setting][Update-Frequency]" value="<?=$data["caption"]["Setting"]["Update-Frequency"]; ?>"	placeholder="更新頻率" data-toggle="tooltip" data-placement="top" title="更新頻率" />
 									</div>
 									
-									<div class="col-6 d-none">
-										<label>MAX Line <i class="fas fa-exclamation-circle" data-toggle="tooltip" data-placement="top" title="每次顯示的句數上限，請輸入半形數字，不輸入時無限制"></i></label>
-										<input type="text" class="form-control" id="inputFontColor" 	name="input[Setting][Max-Line]" value="<?=$data["caption"]["Setting"]["Max-Line"]; ?>"	placeholder="句數上限" data-toggle="tooltip" data-placement="top" title="句數上限" />
+									<div class="col-6">
+										<label>Caption Outboard <i class="fas fa-exclamation-circle" data-toggle="tooltip" data-placement="top" title="字幕組的外框(1px black solid)，用以定位，不輸入時無外框"></i></label>
+										<input type="text" class="form-control" id="inputFontColor" 	name="input[Setting][Caption-Border]" value="<?=$data["caption"]["Setting"]["Caption-Border"]; ?>"	placeholder="字幕組外框置" data-toggle="tooltip" data-placement="top" title="字幕組外框置" />
 									</div>
 								</div>
 								
@@ -81,6 +81,11 @@
 												<label class="form-check-label" for="set_KeepHistroy_y">
 													Yes, 保留
 												</label>
+												
+												<div class="col-6 d-none">
+													<label>MAX Line <i class="fas fa-exclamation-circle" data-toggle="tooltip" data-placement="top" title="每次顯示的句數上限，請輸入半形數字，不輸入時無限制"></i></label>
+													<input type="text" class="form-control" id="inputFontColor" 	name="input[Setting][Max-Line]" value="<?=$data["caption"]["Setting"]["Max-Line"]; ?>"	placeholder="句數上限" data-toggle="tooltip" data-placement="top" title="句數上限" />
+												</div>
 											</div>
 										</div>
 									</div>
@@ -199,23 +204,47 @@
 											<input type="text" class="form-control" id="inputFontColor" 	name="input[Setting][Font-Shadow]" 	value="<?=(isset($data["caption"]["Setting"]["Font-Shadow"])) 	? ($data["caption"]["Setting"]["Font-Shadow"]) 	: (""); ?>"	placeholder="文字陰影" data-toggle="tooltip" data-placement="top" title="文字陰影" />
 										</div>
 									</div>
-									<div class="col-12">
-										<label>Font Position</label>
+									<div class="row ml-1 mt-1">
+										<div class="col-6">
+											<label>Font Position</label>
+											<div class="d-flex">
+												<div class="col-md-4">
+													<input type="radio" id="inputContentLeft" name="input[Setting][Font-Content]" value="1" <?=(isset($data["caption"]["Setting"]["Font-Content"]) && ($data["caption"]["Setting"]["Font-Content"] == 1)) ? ("checked") : (""); ?> placeholder="文字位置(靠左)" data-toggle="tooltip" data-placement="top" title="文字位置(靠左)" />
+													<label for="inputContentLeft">文字位置(靠左)</label>
+												</div>
+												<div class="col-md-4">
+													<input type="radio" id="inputContentCent" name="input[Setting][Font-Content]" value="2" <?=(isset($data["caption"]["Setting"]["Font-Content"]) && ($data["caption"]["Setting"]["Font-Content"] == 2)) ? ("checked") : (""); ?> placeholder="文字位置(置中)" data-toggle="tooltip" data-placement="top" title="文字位置(置中)" />
+													<label for="inputContentCent">文字位置(置中)</label>
+												</div>
+												<div class="col-md-4">
+													<input type="radio" id="inputContentRigh" name="input[Setting][Font-Content]" value="3" <?=(isset($data["caption"]["Setting"]["Font-Content"]) && ($data["caption"]["Setting"]["Font-Content"] == 3)) ? ("checked") : (""); ?> placeholder="文字位置(靠右)" data-toggle="tooltip" data-placement="top" title="文字位置(靠右)" />
+													<label for="inputContentRigh">文字位置(靠右)</label>
+												</div>
+											</div>
+										</div>
+										<div class="col-6">
+											<label>Align Position</label>
+											<div class="d-flex">
+												<div class="col-md-3">
+													<input type="radio" id="inputContentNo" name="input[Setting][Align-Content]" value="0" <?=(isset($data["caption"]["Setting"]["Align-Content"]) && ($data["caption"]["Setting"]["Align-Content"] == 0)) ? ("checked") : (""); ?> placeholder="垂直位置(不設置)" data-toggle="tooltip" data-placement="top" title="垂直位置(不設置)" />
+													<label for="inputContentNo">垂直位置(不設置)</label>
+												</div>
+												<div class="col-md-3">
+													<input type="radio" id="inputContentTop" name="input[Setting][Align-Content]" value="1" <?=(isset($data["caption"]["Setting"]["Align-Content"]) && ($data["caption"]["Setting"]["Align-Content"] == 1)) ? ("checked") : (""); ?> placeholder="垂直位置(靠上)" data-toggle="tooltip" data-placement="top" title="垂直位置(靠上)" />
+													<label for="inputContentTop">垂直位置(靠上)</label>
+												</div>
+												<div class="col-md-3">
+													<input type="radio" id="inputContentMid" name="input[Setting][Align-Content]" value="2" <?=(isset($data["caption"]["Setting"]["Align-Content"]) && ($data["caption"]["Setting"]["Align-Content"] == 2)) ? ("checked") : (""); ?> placeholder="垂直位置(置中)" data-toggle="tooltip" data-placement="top" title="垂直位置(置中)" />
+													<label for="inputContentMid">垂直位置(置中)</label>
+												</div>
+												<div class="col-md-3">
+													<input type="radio" id="inputContentDown" name="input[Setting][Align-Content]" value="3" <?=(isset($data["caption"]["Setting"]["Align-Content"]) && ($data["caption"]["Setting"]["Align-Content"] == 3)) ? ("checked") : (""); ?> placeholder="垂直位置(靠下)" data-toggle="tooltip" data-placement="top" title="垂直位置(靠下)" />
+													<label for="inputContentDown">垂直位置(靠下)</label>
+												</div>
+											</div>
+										</div>
 									</div>
-									<div class="d-flex">
-										<div class="col-md-4">
-											<input type="radio" id="inputContentLeft" name="input[Setting][Font-Content]" value="1" <?=(isset($data["caption"]["Setting"]["Font-Content"]) && ($data["caption"]["Setting"]["Font-Content"] == 1)) ? ("checked") : (""); ?> placeholder="文字位置(靠左)" data-toggle="tooltip" data-placement="top" title="文字位置(靠左)" />
-											<label for="inputContentLeft">文字位置(靠左)</label>
-										</div>
-										<div class="col-md-4">
-											<input type="radio" id="inputContentCent" name="input[Setting][Font-Content]" value="2" <?=(isset($data["caption"]["Setting"]["Font-Content"]) && ($data["caption"]["Setting"]["Font-Content"] == 2)) ? ("checked") : (""); ?> placeholder="文字位置(置中)" data-toggle="tooltip" data-placement="top" title="文字位置(置中)" />
-											<label for="inputContentCent">文字位置(置中)</label>
-										</div>
-										<div class="col-md-4">
-											<input type="radio" id="inputContentRigh" name="input[Setting][Font-Content]" value="3" <?=(isset($data["caption"]["Setting"]["Font-Content"]) && ($data["caption"]["Setting"]["Font-Content"] == 3)) ? ("checked") : (""); ?> placeholder="文字位置(靠右)" data-toggle="tooltip" data-placement="top" title="文字位置(靠右)" />
-											<label for="inputContentRigh">文字位置(靠右)</label>
-										</div>
-									</div>
+									
 									<div class="d-flex">
 										<div class="col-md-6">
 											<input type="text" class="form-control" id="inputFontPosX" name="input[Setting][Font-Position][X]" value="<?=(isset($data["caption"]["Setting"]["Font-Position"]["X"])) ? ($data["caption"]["Setting"]["Font-Position"]["X"]) : (""); ?>" placeholder="文字位置(X)" data-toggle="tooltip" data-placement="top" title="文字位置(X)" />

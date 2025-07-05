@@ -46,7 +46,35 @@
 	#div_captionBox {
 		width: 	<?=(isset($data["setting"]["Board-Width"])) 	? ($data["setting"]["Board-Width"]."px") 		: ("auto"); ?>;
 		height: <?=(isset($data["setting"]["Board-Height"])) 	? ($data["setting"]["Board-Height"]."px") 	: ("auto"); ?>;
-		border: 1px black solid;
+		<?php
+			if( isset($data["setting"]["Caption-Border"]) ) {
+				echo "border: ".$data["setting"]["Caption-Border"].";";
+			}
+		?>
+		<?php 
+			switch($data["setting"]["Align-Content"]) {
+				case 1:
+				case "1":
+					echo "display: flex; ";
+					echo "align-items: flex-start; 			/* 水平方向靠上 */ ";
+					echo "justify-content: flex-start; 	/* 垂直方向靠左 */ ";
+					break;
+				case 2:
+				case "2":
+					echo "display: flex; ";
+					echo "align-items: center; 					/* 水平方向靠上 */ ";
+					echo "justify-content: center; 			/* 垂直方向靠左 */ ";
+					break;
+				case 3:
+				case "3":
+					echo "display: flex; ";
+					echo "align-items: flex-end; 				/* 水平方向靠下 */ ";
+					echo "justify-content: flex-end; 		/* 垂直方向靠右 */ ";
+					break;
+				default:
+					break;
+			} 
+		?>
 		overflow-y: scroll;
 	}
 	.css_transparent {
@@ -80,7 +108,7 @@
 		color: <?=$data["setting"]["Font-Color"]; ?>;
 		<?php endif; ?>
 		
-		<?php if( isset($data["setting"]["Font-Shadow"]) && ( $data["setting"]["Background-Color"] != "" ) ): ?>
+		<?php if( isset($data["setting"]["Font-Shadow"]) && ( $data["setting"]["Font-Shadow"] != "" ) ): ?>
 		text-shadow: <?=$data["setting"]["Font-Shadow"]; ?>;
 		<?php endif; ?>
 		
@@ -150,52 +178,10 @@
 		let timerId = setInterval("js_makeupSubtitleData(1);", set_intervalTime);
 	});
 	
-	//利用 ajax抓取資料	ipt_grabType == 1的時候，抓最新的資料；2的時候，抓全部的資料
-	function ajax_getSubtitleData (ipt_grabType = 1) {
-		//console.log("ajax_getCounterData");
-		let rspData = [];
-		let tmp_modifyType = "NewSubtitles";
-		switch(ipt_grabType) {
-			default:
-			case 1:	//僅抓最新一筆待發佈的
-				tmp_modifyType = "NewSubtitles";
-				break;
-			case 2:	//抓取所有已經發佈過的
-				tmp_modifyType = "AllSubtitles";
-				break;
-			case 3:	//無論狀態抓取所有內容
-				tmp_modifyType = "ZenSubtitles";
-				break;
-			case 4:
-				tmp_modifyType = "LastSubtitles";
-				break;
-		}
-		var datas = [
-			{ name: "modify_type", 		value: tmp_modifyType },
-			{ name: "caption_ID", 		value: <?=$captionID;?> }
-		];
-		rspData = {}
-		$.ajax({
-			type: "POST",
-			url: "./tools/ajax/ajax_getSubtitlesInfo.php",
-			dataType: "JSON",
-			data: datas,
-			async: false,
-			success: function (response) {
-				console.log("success: ", typeof response, "; response:", response);
-				rspData = response;
-			},
-			error: function (thrownError) {
-				//console.log(thrownError);
-			}
-		});
-		return rspData;
-	}
-	
 	function js_makeupSubtitleData (ipt_grabType = 1) {
 		// console.log("js_makeupSubtitleData")
-		let get_subtitleList = ajax_getSubtitleData(ipt_grabType);
-		console.log("js_makeupSubtitleData ", get_subtitleList)
+		let get_subtitleList = ajax_getSubtitleData(<?=$captionID; ?>, ipt_grabType);
+		console.log("js_makeupSubtitleData ", get_subtitleList);
 		//根據抓取到的資料，將字幕寫入到網頁上
 		get_subtitleList.forEach(mod => {
 			if( mod.Subtitle_ID != "" ) {
@@ -295,3 +281,4 @@
 		});
 	}
 </script>
+<script><?php include_once("./tools/js/js_caption_controlTools.php"); ?></script>

@@ -79,7 +79,7 @@ function js_uptTextareaFromCKEditor() {
 	}
 }
 
-// caption_subtitle.php 		// 主要用來新增字幕		@ 大致上完成，但是還要等 CKEditor再一起修改才算完成
+// caption_subtitle.php 		// 主要用來新增字幕	
 function ajax_addNewSubtitles() {
 	let rspData = [];					//console.log("ajax_addNewSubtitles");
 	
@@ -112,7 +112,7 @@ function ajax_addNewSubtitles() {
   });
 }
 
-// caption_subtitle.php 		// 主要用來修改字幕		@ 大致上完成，但是還要等 CKEditor再一起修改才算完成
+// caption_subtitle.php 		// 主要用來修改字幕
 function ajax_chgthisSubtitles(target_ID) {
 	let rspData = [];			//console.log("ajax_chgthisSubtitles: ", target_ID);
 	
@@ -155,7 +155,7 @@ function ajax_chgthisSubtitles(target_ID) {
 }
 
 
-// caption_subtitle.php			// 主要用來修改順序 	@ 還沒修改到這邊，要搭配 drag & drop
+// caption_subtitle.php			// 主要用來修改順序
 function ajax_chgSubtitleOrder() {
 	//console.log("ajax_chgSubtitleOrder");
 	let rspData = [];
@@ -175,7 +175,7 @@ function ajax_chgSubtitleOrder() {
 			rspData = response;
 			//alert("修改成功");
 			fun_throughToast2Local({toastMsg: "The Subtitle's order is success changed."});
-			//location.reload();
+			location.reload();
     },
     error: function (thrownError) {
       console.log("thrownError ", thrownError);
@@ -229,3 +229,57 @@ function ajax_publishthisSubtitles(target_ID) {
     }
   });
 }
+
+	
+//利用 ajax抓取資料	ipt_grabType == 1的時候，抓最新的資料；2的時候，抓全部的資料
+function ajax_getSubtitleData (captionID = 0, ipt_grabType = 1) {
+	//console.log("ajax_getCounterData");
+	let rspData = [];
+	let tmp_modifyType = "NewSubtitles";
+	switch(ipt_grabType) {
+		default:
+		case 1:	//僅抓最新一筆待發佈的
+			tmp_modifyType = "NewSubtitles";
+			break;
+		case 2:	//抓取所有已經發佈過的
+			tmp_modifyType = "AllSubtitles";
+			break;
+		case 3:	//無論狀態抓取所有內容
+			tmp_modifyType = "ZenSubtitles";
+			break;
+		case 4:
+			tmp_modifyType = "LastSubtitles";
+			break;
+		case 5:
+			tmp_modifyType = "LastAddSub";
+			break;
+		case 6:
+			tmp_modifyType = "LastModifySub";
+			break;
+	}
+	var datas = [
+		{ name: "modify_type", 		value: tmp_modifyType },
+		{ name: "caption_ID", 		value: captionID }
+	];
+	rspData = {}
+	$.ajax({
+		type: "POST",
+		url: "./tools/ajax/ajax_getSubtitlesInfo.php",
+		dataType: "JSON",
+		data: datas,
+		async: false,
+		success: function (response) {
+			console.log("success: ", typeof response, "; response:", response);
+			rspData = response;
+		},
+		error: function (thrownError) {
+			//console.log(thrownError);
+		}
+	});
+	return rspData;
+}
+
+
+
+
+
