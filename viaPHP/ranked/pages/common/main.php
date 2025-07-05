@@ -8,23 +8,20 @@
 				$navigate_url = "./pages/dashboard.php";
 				break;
 			default:
-			case "product": 
-				$navigate_url = "./pages/product.php";
-				break;
 			case "listEvent": 
 				$navigate_url = "./pages/event/event_list.php";
 				break;
 			case "newEvent": 
 				$navigate_url = "./pages/event/event_create.php";
 				break;
+			case "editEvent": 
+				$navigate_url = "./pages/event/event_edit.php";
+				break;
 			case "scoreEvent": 
 				$navigate_url = "./pages/event/event_score.php";
 				break;
 			case "scoreBoard": 
 				$navigate_url = "./pages/event/event_scoreBoard.php";
-				break;
-			case "LLK": 
-				$navigate_url = "./pages/LLK_gameTurn.php";
 				break;
 		}
 		

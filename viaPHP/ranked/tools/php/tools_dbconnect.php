@@ -16,7 +16,7 @@
 	
 	function fun_getDBData($sql = "") {
 		$link = fun_dbconnection();
-		
+		$datas = array();
 		
 		// 用mysqli_query方法執行(sql語法)將結果存在變數中
 		$result = mysqli_query($link,$sql);
@@ -55,5 +55,13 @@
 		// 用mysqli_query方法執行(sql語法)將結果存在變數中
 		$result = mysqli_query($link,$sql);
 		return true;
+	}
+	function fun_insDBData($sql = "") {
+		$link = fun_dbconnection();
+		
+		
+		// 用mysqli_query方法執行(sql語法)將結果存在變數中
+		$result = mysqli_query($link,$sql);
+		return mysqli_insert_id($link);
 	}
 ?>

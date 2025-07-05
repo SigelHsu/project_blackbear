@@ -32,83 +32,63 @@
 				</div>
 			</div>
 			
+			
+			<?php 
+				//從資料庫中讀取活動資料
+				$ary_eventList = fun_getEventsData();
+			?>
 			<!-- Card Body -->
 			<div class="card-body">
 				<div class="table-area">
 					<table class="table">
 						<thead>
-							<tr>
-								<th scope="col">ENO</th>
-								<th scope="col">活動名稱</th>
-								<th scope="col">工具</th>
+							<tr class="text-center">
+								<th scope="col-2">ENO</th>
+								<th scope="col-2">Code</th>
+								<th scope="col-4">活動名稱</th>
+								<th scope="col-4">工具</th>
 							</tr>
 						</thead>
 						<tbody>
-							<?php 
-								$ary_productList = array(
-									0 => array(
-										"prod_id" 			=> 1,
-										"prod_no" 			=> 'PNO001',
-										"prod_code" 		=> 'TR-001',
-										"prod_type" 		=> '紙盒',
-										"prod_name" 		=> '印刷紙盒',
-										"prod_barcode" 	=> '0123456789',
-										"prod_quantity" => array(
-																				"imports" 	=> '10000',
-																				"exports" 	=> '5000',
-																				"destroy" 	=> '4000',
-																			 ),
-										"prod_version" => "1.01",
-									),
-									1 => array(
-										"prod_id" 			=> 2,
-										"prod_no" 			=> 'PNO002',
-										"prod_code" 		=> 'TR-002',
-										"prod_type" 		=> '貼紙',
-										"prod_name" 		=> 'TR-001封膜貼紙',
-										"prod_barcode" 	=> '',
-										"prod_quantity" => array(
-																				"imports" 	=> '5000',
-																				"exports" 	=> '4000',
-																				"destroy" 	=> '0',
-																			 ),
-										"prod_version" => "1.01",
-									),
-									2 => array(
-										"prod_id" 			=> 3,
-										"prod_no" 			=> 'PNO003',
-										"prod_code" 		=> 'TR-003',
-										"prod_type" 		=> '說明書',
-										"prod_name" 		=> 'TR-001說明書',
-										"prod_barcode" 	=> '',
-										"prod_quantity" => array(
-																				"imports" 	=> '5000',
-																				"exports" 	=> '4800',
-																				"destroy" 	=> '0',
-																			 ),
-										"prod_version" => "1.01",
-									),
-								);
-							?>
-							<?php
-								foreach($ary_productList AS $Key => $Values) {
-									echo "<tr>";
-									echo 	"<th scope = \"row\">".$Values["prod_no"]."</th>";
-									echo 	"<td>".$Values["prod_name"]."</td>";
-									echo 	"<td class = \"row\">";
-									echo 		"<button type = \"button\" class = \"btn btn-secondary\" class = \"col\" data-toggle = \"tooltip\" data-placement = \"top\" title = \"Tooltip on top\">";
-									echo 		"<i class = \"far fa-file-alt\"></i>查看";
-									echo 		"</button>";
-									echo 		"<button type = \"button\" class = \"btn btn-secondary\" class = \"col\" data-toggle = \"tooltip\" data-placement = \"top\" title = \"Tooltip on top\">";
-									echo 		"<i class = \"far fa-file-alt\"></i>記分板";
-									echo 		"</button>";
-									echo 		"<button type = \"button\" class = \"btn btn-secondary\" class = \"col\" data-toggle = \"tooltip\" data-placement = \"top\" title = \"Tooltip on top\">";
-									echo 		"<i class = \"fas fa-pen\"></i>編輯";
-									echo 		"</button>";
-									echo 	"</td>";
-									echo "</tr>";
-								}
-							?>
+						<?php
+							foreach($ary_eventList AS $Key => $Values) :
+						?>
+							<tr>
+								<th class="col-2"><?=$Values["Event_No"]; ?></th>
+								<td class="col-2">
+									<?=$Values["Event_Code"]; ?>
+									<div class="dropdown no-arrow">
+										<a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink_<?=$Key; ?>"
+											 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											<i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+										</a>
+										<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+												 aria-labelledby="dropdownMenuLink_<?=$Key; ?>">
+											<button type = "button" class = "btn btn-secondary ml-2" class = "col" onclick = "javaScript: location.href='./index.php?loc=newEvent&code=<?=$Values["Event_Code"]; ?>'" data-toggle = "tooltip" data-placement = "top" title = "複製此活動內容、設定">
+												<i class="fas fa-copy"></i>複製
+											</button>
+											<button type = "button" class = "btn btn-secondary ml-2" class = "col" onclick = "javaScript: window.open('./tools/ajax/ajax_getRankData.php?tag=1&code=<?=$Values["Event_Code"]; ?>')" data-toggle = "tooltip" data-placement = "top" title = "JSON連結">
+												<i class="fab fa-js-square"></i>JSON
+											</button>
+										</div>
+									</div>
+								</td>
+								<td class="col-4"><?=$Values["Event_Title"]; ?></td>
+								<td class="col-4 text-center">
+									<button type = "button" class = "btn btn-secondary ml-1" class = "col" onclick = "javaScript: window.open('./index.php?loc=scoreBoard&code=<?=$Values["Event_Code"]; ?>')" data-toggle = "tooltip" data-placement = "top" title = "查看記分板(無編輯功能)">
+										<i class="fab fa-flipboard"></i></i>查看
+									</button>
+									<button type = "button" class = "btn btn-secondary ml-1" class = "col" onclick = "javaScript: location.href='./index.php?loc=scoreEvent&code=<?=$Values["Event_Code"]; ?>'" data-toggle = "tooltip" data-placement = "top" title = "編輯記分板，用以修改即時分數">
+										<i class = "far fa-file-alt"></i>編輯
+									</button>
+									<button type = "button" class = "btn btn-secondary ml-1" class = "col" onclick = "javaScript: location.href='./index.php?loc=editEvent&code=<?=$Values["Event_Code"]; ?>'" data-toggle = "tooltip" data-placement = "top" title = "修改、編輯活動內容、設定">
+										<i class = "fas fa-pen"></i>內容
+									</button>									
+								</td>
+							</tr>
+						<?php 
+							endforeach;
+						?>
 						</tbody>
 					</table>
 				</div>

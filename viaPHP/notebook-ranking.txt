@@ -1,0 +1,213 @@
+因為要幫黑熊做個 Ranked的介面，找了下列的資料
+	https://www.hitthebits.com/2012/05/animating-list-with-css3-transitions.html
+	https://stackoverflow.com/questions/32209517/dynamic-user-rating-table-in-jquery
+	https://uniformjs.com/animating-html-ranking-tables-with-javascript/
+	https://www.youtube.com/watch?v=bppuXpcJUvk
+	https://ithelp.ithome.com.tw/articles/10208479
+	https://bootstrap5.hexschool.com/docs/5.1/utilities/background/
+	
+	
+	https://stackoverflow.com/questions/11258077/how-to-find-index-of-an-object-by-key-and-value-in-an-javascript-array
+	
+	目前思考的是，
+	
+		CREATE TABLE `db_ranking`.`tb_event` (`Event_ID` INT NOT NULL AUTO_INCREMENT , `Event_No` TEXT NOT NULL , `Event_Title` TEXT NOT NULL , `Event_Img` TEXT NOT NULL , `Status` INT NOT NULL , `Create_Date` DATETIME NOT NULL , `Modify_Date` DATETIME NOT NULL , PRIMARY KEY (`Event_ID`)) ENGINE = InnoDB;
+		tb_event
+			Event_ID:
+			Event_No: 		主要是考量到，因為可能會有多次比賽需要進行排名，因此需要這項資料，來尋找相關的場次
+			Event_Title: 
+			Event_Img: 		要用來展示的圖片以及大小 array(ImgLoc: "", ImgWid: "", ImgHei: "", ImgTop: "margin-top", ImgLeft: "其實是 margin-left") --需要加 px
+			Setting:			一些相關設置(是否顯示 Title、排名文字的大小與顏色/圖片、欄位高度(height)、字元高度(line-height) 等)
+			Status:
+			Create_Date:
+			Modify_Date:
+		
+		CREATE TABLE `db_ranking`.`tb_rankrule` (`RankRule_ID` INT NOT NULL AUTO_INCREMENT , `Event_ID` INT NOT NULL , `Rule_Tag` TEXT NOT NULL , `Rule_Img` TEXT NOT NULL , `Rule_Asc` INT NOT NULL , `Rule_Order` INT NOT NULL , `Status` INT NOT NULL , `Create_Date` DATETIME NOT NULL , `Modify_Date` DATETIME NOT NULL , PRIMARY KEY (`RankRule_ID`)) ENGINE = InnoDB;
+		tb_rankRule
+			RankRule_ID:
+			Event_ID:
+			Rule_Tag: 	*因為會當作相關變數的名稱，需要英文
+			Rule_Img: 	要用來展示的圖片以及大小 array(ImgLoc: "", ImgWid: "", ImgHei: "", ImgTop: "margin-top", ImgLeft: "其實是 margin-left") --需要加 px
+			Rule_Asc:		*1.昇冪排序或 2.降冪排序
+			Rule_Order: 排序數字次序
+			Status:
+			Create_Date:
+			Modify_Date:
+			
+		CREATE TABLE `db_ranking`.`tb_teams` (`Team_ID` INT NOT NULL AUTO_INCREMENT , `Team_No` TEXT NOT NULL , `Team_Name` TEXT NOT NULL , `Team_Img` TEXT NOT NULL , `Status` INT NOT NULL , `Create_Date` DATETIME NOT NULL , `Modify_Date` DATETIME NOT NULL , PRIMARY KEY (`Team_ID`)) ENGINE = InnoDB;
+		tb_teams 				=>參賽隊伍
+			Team_ID:
+			Team_No:
+			Team_Name:
+			Team_Img: 		要用來展示的圖片以及大小 array(ImgLoc: "", ImgWid: "", ImgHei: "", ImgTop: "margin-top", ImgLeft: "其實是 margin-left") --需要加 px
+			Status:
+			Create_Date:
+			Modify_Date:
+			
+	-->突然發現這段寫得不好，應該把這部分的資料放到 tb_ranked裡面，然後取消 tb_teammember跟 tb_teams這兩個
+		 原因: 1. 每場活動，玩家名字和圖片可能有所變動，放在這邊會導致兩場本應不一樣的變一樣(除非跟使用者說好....但太麻煩，要分兩處管理
+					 2. 如上文所述，要分很多處進行管理，有點太麻煩	3. 另外就是 tb_teams跟 tb_teammember這兩張表的效用很低...用不太到
+		CREATE TABLE `db_ranking`.`tb_player` (`Player_ID` INT NOT NULL AUTO_INCREMENT, `Player_No` TEXT NOT NULL , `Player_Name` TEXT NOT NULL , `Player_Img` TEXT NOT NULL , `Status` INT NOT NULL , `Create_Date` DATETIME NOT NULL , `Modify_Date` DATETIME NOT NULL ) ENGINE = InnoDB;
+		tb_player 			=> 參賽人員
+			Player_ID:
+			Player_No:
+			Player_Name:
+			Player_Img: 	要用來展示的圖片以及大小 array(ImgLoc: "", ImgWid: "", ImgHei: "") --需要加 px
+			Status:
+			Create_Date:
+			Modify_Date:
+			
+		CREATE TABLE `db_ranking`.`tb_teammember` (`teamMember_ID` INT NOT NULL AUTO_INCREMENT , `Team_ID` INT NOT NULL , `Player_ID` INT NOT NULL , `Status` INT NOT NULL , `Create_Date` DATETIME NOT NULL , `Modify_Date` DATETIME NOT NULL , PRIMARY KEY (`teamMember_ID`)) ENGINE = InnoDB;
+		tb_teamMember		=> 隊伍的成員
+			teamMember_ID:
+			Team_ID:
+			Player_ID:
+			Status:
+			Create_Date:
+			Modify_Date:
+			
+		CREATE TABLE `db_ranking`.`tb_ranked` (`Ranked_ID` INT NOT NULL AUTO_INCREMENT , `Event_ID` INT NOT NULL , `Player_ID` INT NOT NULL , `Score` TEXT NOT NULL , `Status` INT NOT NULL , `Create_Date` DATETIME NOT NULL , `Modify_Date` DATETIME NOT NULL , PRIMARY KEY (`Ranked_ID`)) ENGINE = InnoDB;
+		tb_ranked				=>起始 & 存放最後紀錄的狀態
+			Ranked_ID:
+			Event_ID:
+			Player_ID:
+			Score:				以陣列方式存放，才能放多筆需要比對的部分
+			Status:
+			Create_Date:
+			Modify_Date:
+		
+		CREATE TABLE `db_ranking`.`tb_ranked_log` (`RankLog_ID` INT NOT NULL AUTO_INCREMENT, `Event_ID` INT NOT NULL , `Ranked_ID` INT NOT NULL , `Log_Info` TEXT NOT NULL , `Status` INT NOT NULL , `Create_Date` DATETIME NOT NULL , `Modify_Date` DATETIME NOT NULL ) ENGINE = InnoDB;
+		tb_ranked_Log		=>存放log
+			RankLog_ID:
+			Event_ID:
+			Ranked_ID:
+			Log_Info
+			Status:
+			Create_Date:
+			Modify_Date:
+			
+			
+		CREATE TABLE `db_ranking`.`tb_player` (`Player_ID` INT NOT NULL AUTO_INCREMENT, `Player_No` TEXT NOT NULL , `Player_Name` TEXT NOT NULL , `Player_Img` TEXT NOT NULL , `Status` INT NOT NULL , `Create_Date` DATETIME NOT NULL , `Modify_Date` DATETIME NOT NULL ) ENGINE = InnoDB;
+			Player_No:		-->因為沒有要統一管理，除非未來另外再拆分出 Player_ID、Player_No，跟另外的名字以及圖片設置，作為預設
+			
+		CREATE TABLE `db_ranking`.`tb_ranked` (`Ranked_ID` INT NOT NULL AUTO_INCREMENT , `Event_ID` INT NOT NULL , `Player_ID` INT NOT NULL , `Score` TEXT NOT NULL , `Status` INT NOT NULL , `Create_Date` DATETIME NOT NULL , `Modify_Date` DATETIME NOT NULL , PRIMARY KEY (`Ranked_ID`)) ENGINE = InnoDB;
+		tb_ranked				=>起始 & 存放最後紀錄的狀態
+			Ranked_ID:
+			Event_ID:
+			Player_ID:
+			Player_Name:
+			Player_Img: 	要用來展示的圖片以及大小 array(ImgLoc: "", ImgWid: "", ImgHei: "") --需要加 px
+			Score:				以陣列方式存放，才能放多筆需要比對的部分
+			Status:
+			Create_Date:
+			Modify_Date:
+			
+			
+		INSERT INTO `tb_event` (`Event_No`, `Event_Title`, `Event_Img`, `Status`, `Create_Date`, `Modify_Date`) VALUES ('E000001', '盧實戰技', '', 1, '2024-04-03 11:21:00', '2024-04-03 11:21:00');
+		
+		INSERT INTO `tb_rankrule` (`Event_ID`, `Rule_Tag`, `Rule_Img`, `Rule_Asc`, `Rule_Order`, `Status`, `Create_Date`, `Modify_Date`) 
+					VALUES ('1', 'Score', './img/blood.png', 1, 1, 1, '2024-04-03 11:30:00', '2024-04-03 11:30:00');
+						
+		INSERT INTO `tb_rankrule` (`Event_ID`, `Rule_Tag`, `Rule_Img`, `Rule_Asc`, `Rule_Order`, `Status`, `Create_Date`, `Modify_Date`) 
+			VALUES ('1', 'Star', './img/star.png', 1, 2, 1, '2024-04-03 11:30:00', '2024-04-03 11:30:00');
+				
+		INSERT INTO `tb_rankrule` (`Event_ID`, `Rule_Tag`, `Rule_Img`, `Rule_Asc`, `Rule_Order`, `Status`, `Create_Date`, `Modify_Date`) 
+			VALUES ('1', 'Cards', './img/card-game.png', 1, 3, 1, '2024-04-03 11:30:00', '2024-04-03 11:30:00');
+			
+			
+		INSERT INTO `tb_player` (`Player_No`, `Player_Name`, `Player_Img`, `Status`, `Create_Date`, `Modify_Date`) 
+					VALUES ('P00001', 'Rat', './img/rat.png', 1, '2024-04-03 11:34:00', '2024-04-03 11:34:00');
+		INSERT INTO `tb_player` (`Player_No`, `Player_Name`, `Player_Img`, `Status`, `Create_Date`, `Modify_Date`) 
+					VALUES ('P00002', 'Cow', './img/cow.png', 1, '2024-04-03 11:34:00', '2024-04-03 11:34:00');
+		INSERT INTO `tb_player` (`Player_No`, `Player_Name`, `Player_Img`, `Status`, `Create_Date`, `Modify_Date`) 
+					VALUES ('P00003', 'Tiger', './img/tiger.png', 1, '2024-04-03 11:34:00', '2024-04-03 11:34:00');
+		INSERT INTO `tb_player` (`Player_No`, `Player_Name`, `Player_Img`, `Status`, `Create_Date`, `Modify_Date`) 
+					VALUES ('P00004', 'Rabbit', './img/rabbit.png', 1, '2024-04-03 11:34:00', '2024-04-03 11:34:00');
+		INSERT INTO `tb_player` (`Player_No`, `Player_Name`, `Player_Img`, `Status`, `Create_Date`, `Modify_Date`) 
+					VALUES ('P00005', 'Dragon', './img/dragon.png', 1, '2024-04-03 11:34:00', '2024-04-03 11:34:00');
+		INSERT INTO `tb_player` (`Player_No`, `Player_Name`, `Player_Img`, `Status`, `Create_Date`, `Modify_Date`) 
+					VALUES ('P00006', 'Snake', './img/snake.png', 1, '2024-04-03 11:34:00', '2024-04-03 11:34:00');
+		INSERT INTO `tb_player` (`Player_No`, `Player_Name`, `Player_Img`, `Status`, `Create_Date`, `Modify_Date`) 
+					VALUES ('P00007', 'Hoses', './img/hoses.png', 1, '2024-04-03 11:34:00', '2024-04-03 11:34:00');
+					
+		INSERT INTO `tb_teammember`(`Player_ID`, `Status`, `Create_Date`, `Modify_Date`)
+				VALUES (1, 1, '2024-04-03 12:03:00', '2024-04-03 12:03:00');
+		INSERT INTO `tb_teammember`(`Player_ID`, `Status`, `Create_Date`, `Modify_Date`)
+				VALUES (2, 1, '2024-04-03 12:03:00', '2024-04-03 12:03:00');
+		INSERT INTO `tb_teammember`(`Player_ID`, `Status`, `Create_Date`, `Modify_Date`)
+				VALUES (3, 1, '2024-04-03 12:03:00', '2024-04-03 12:03:00');
+		INSERT INTO `tb_teammember`(`Player_ID`, `Status`, `Create_Date`, `Modify_Date`)
+				VALUES (4, 1, '2024-04-03 12:03:00', '2024-04-03 12:03:00');
+		INSERT INTO `tb_teammember`(`Player_ID`, `Status`, `Create_Date`, `Modify_Date`)
+				VALUES (5, 1, '2024-04-03 12:03:00', '2024-04-03 12:03:00');
+		INSERT INTO `tb_teammember`(`Player_ID`, `Status`, `Create_Date`, `Modify_Date`)
+				VALUES (6, 1, '2024-04-03 12:03:00', '2024-04-03 12:03:00');
+		INSERT INTO `tb_teammember`(`Player_ID`, `Status`, `Create_Date`, `Modify_Date`)
+				VALUES (7, 1, '2024-04-03 12:03:00', '2024-04-03 12:03:00');
+					
+		INSERT INTO `tb_ranked`(`Event_ID`, `Player_ID`, `Score`, `Status`, `Create_Date`, `Modify_Date`)
+				VALUES (1, 1, '{"Score":30,"Star":3,"Cards":2}', 1, '2024-04-03 12:03:00', '2024-04-03 12:03:00');
+		INSERT INTO `tb_ranked`(`Event_ID`, `Player_ID`, `Score`, `Status`, `Create_Date`, `Modify_Date`)
+				VALUES (1, 2, '{"Score":30,"Star":3,"Cards":2}', 1, '2024-04-03 12:03:00', '2024-04-03 12:03:00');
+		INSERT INTO `tb_ranked`(`Event_ID`, `Player_ID`, `Score`, `Status`, `Create_Date`, `Modify_Date`)
+				VALUES (1, 3, '{"Score":30,"Star":3,"Cards":2}', 1, '2024-04-03 12:03:00', '2024-04-03 12:03:00');
+		INSERT INTO `tb_ranked`(`Event_ID`, `Player_ID`, `Score`, `Status`, `Create_Date`, `Modify_Date`)
+				VALUES (1, 4, '{"Score":30,"Star":3,"Cards":2}', 1, '2024-04-03 12:03:00', '2024-04-03 12:03:00');
+		INSERT INTO `tb_ranked`(`Event_ID`, `Player_ID`, `Score`, `Status`, `Create_Date`, `Modify_Date`)
+				VALUES (1, 5, '{"Score":30,"Star":3,"Cards":2}', 1, '2024-04-03 12:03:00', '2024-04-03 12:03:00');
+		INSERT INTO `tb_ranked`(`Event_ID`, `Player_ID`, `Score`, `Status`, `Create_Date`, `Modify_Date`)
+				VALUES (1, 6, '{"Score":30,"Star":3,"Cards":2}', 1, '2024-04-03 12:03:00', '2024-04-03 12:03:00');
+		INSERT INTO `tb_ranked`(`Event_ID`, `Player_ID`, `Score`, `Status`, `Create_Date`, `Modify_Date`)
+				VALUES (1, 7, '{"Score":30,"Star":3,"Cards":2}', 1, '2024-04-03 12:03:00', '2024-04-03 12:03:00');
+				
+		
+		!!還有 Font-family跟 Font-Size要加入，以及 background-color
+		!!!要對 EVENT多加一個 unique的...六個字元的亂數字串，主要是擔心用 EVENT_NO會容易被猜到其他活動的編號
+		https://seanphpbook.blogspot.com/2015/04/jquery-parent-parents-closest.html
+		
+		在思考...Col Height應該會等同於 其他部分的高度 (Line-Height需要-20嗎?這個要多多測試)
+		然而，Col Width 應該為 ... Rank Width + Rule Width....但還有 Player Width...這個我可能沒有要給設置...?
+		
+		關於檔案上傳的部分
+		https://pjchender.blogspot.com/2019/01/js-javascript-input-file-upload-file.html
+		https://stackoverflow.com/questions/16215771/how-to-open-select-file-dialog-via-js
+		https://stackoverflow.com/questions/2320069/jquery-ajax-file-upload
+		https://stackoverflow.com/questions/1144705/best-way-to-store-a-key-value-array-in-javascript
+		
+		https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
+		https://stackoverflow.com/questions/1068189/post-an-object-as-data-using-jquery-ajax
+			(送值時用了 stringify的話，後端需要 json_decode(..., true)來轉回陣列
+			 但若不用 stringify的話，到後端會變成 [object Object]的string字串，拿不到資料)
+			 
+	 https://ithelp.ithome.com.tw/articles/10095237
+	 https://bootstrap5.hexschool.com/docs/5.0/layout/grid/
+	 
+	 https://blog.gtwang.org/programming/php-upload-files-tutorial/
+	 https://stackoverflow.com/questions/7755088/what-does-href-expression-a-href-javascript-a-do
+	 https://cumi.co/notes/php/4
+	 
+	 //不確定為什麼 $_SERVER["HTTP_ORIGIN"]會出現 ERROR，先暫時用 isset去處理
+	 https://stackoverflow.com/questions/41231116/serverhttp-origin-doesnt-work
+	 //但還是有錯誤，所以改用下列的方式去處理了
+	 https://stackoverflow.com/questions/18220977/how-do-i-get-the-root-url-of-the-site
+	 
+	 https://stackoverflow.com/questions/44355658/mysqli-insert-id-expects-exactly-1-parameter-0-given-in-codeigniter
+				
+				
+		UPDATE tb_ranked tb1 
+			 SET tb1.Player_Name = tb2.Player_Name, 
+					 tb1.Player_Img = tb2.Player_Img 
+			FROM (SELECT Player_ID, Player_Name, Player_Img FROM tb_player) tb2 
+		 WHERE tb1.Player_ID = tb2.Player_ID
+																						--->失敗
+		
+		
+		
+		UPDATE tb_ranked tb1 
+			JOIN tb_player tb2 
+				ON tb1.Player_ID = tb2.Player_ID
+			 SET tb1.Player_Name = tb2.Player_Name, 
+					 tb1.Player_Img = tb2.Player_Img 
+																						--->成功
+																						
+		https://www.w3schools.com/bootstrap4/bootstrap_forms_custom.asp

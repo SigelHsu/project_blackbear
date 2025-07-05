@@ -1,23 +1,50 @@
 let data_Rank;
 let timerId;
 let scoreToWin = 2000;
-let updateInterval = 10000;
+let updateInterval 		= <?=$data["event"]["Setting"]["Update-Frequency"]; ?> * 10000;
+let set_headerHeight 	= <?=$data["event"]["Setting"]["Col-Height"]; ?>;
 
-//昇冪排序	//最原始 function ascension(a, b) 	{ return ( a.ForRank.Score > b.ForRank.Score ? 1 : -1); }
-//function ascension(a, b) 	{ return (a.ForRank.Score == b.ForRank.Score && a.ForRank.Star > b.ForRank.Star) ? 1 : ( a.ForRank.Score > b.ForRank.Score ? 1 : -1); }
-//降冪排序	//最原始 function descending(a, b) 	{ return ( a.ForRank.Score < b.ForRank.Score ? 1 : -1); }
-//function descending(a, b) { return (a.ForRank.Score == b.ForRank.Score && a.ForRank.Star < b.ForRank.Star) ? 1 : ( a.ForRank.Score < b.ForRank.Score ? 1 : -1); }
+<?php
+	function fun_settingRules ($rules = array(), $type = 1, $i = 0) {
+		$setType  = ($type == 1) ? (">") : ("<");
+		$str_rtn  = "";
+		$str_rtn .= "if( a.ForRank.".$rules[$i]["Tag"]." ".$setType." b.ForRank.".$rules[$i]["Tag"]." ) { ";
+		$str_rtn .= 	"return 1;";
+		$str_rtn .= " }";
+		$str_rtn .= "else if( a.ForRank.".$rules[$i]["Tag"]." == b.ForRank.".$rules[$i]["Tag"]." ) { ";
+		
+		if( $i + 1 == count($rules) ) {
+			$str_rtn .= 	"return 0;";
+		}
+		else {
+			$str_rtn .= fun_settingRules($rules, $type, $i+1);
+		}
+		
+		$str_rtn .= " }";
+		
+		return $str_rtn;
+	}
+?>
 
 //昇冪排序
-function ascension(a, b) 	{ return (a.ForRank.Score == b.ForRank.Score) ? 0 : ( a.ForRank.Score > b.ForRank.Score ? 1 : -1); }
-//降冪排序，以 score先排序，然後是 star
-function descending(a, b) { return (a.ForRank.Score == b.ForRank.Score) ? 0 : ( a.ForRank.Score < b.ForRank.Score ? 1 : -1); }
-
+function ascension(a, b) 	{ 
+	//return (a.ForRank.Score == b.ForRank.Score) ? 0 : ( a.ForRank.Score > b.ForRank.Score ? 1 : -1); 
+	<?=fun_settingRules($data["rules"], 1); ?>
+	return -1;
+	
+}
+//降冪排序
+function descending(a, b) {
+	//return (a.ForRank.Score == b.ForRank.Score) ? 0 : ( a.ForRank.Score < b.ForRank.Score ? 1 : -1); 
+	
+	<?=fun_settingRules($data["rules"], 2); ?>
+	return -1;
+}
 
 //調整相對高度...y為標題欄位的高度。(這邊應該可以調整，除了標題以外，還有各個欄位的高度)
 function reposition(data) {
-	$(".sticky-footer").addClass("d-none");
-	let height = $("#leaderboard .header").height();
+	//$(".sticky-footer").addClass("d-none");
+	let height = set_headerHeight;
 	let y = height;
 	for(var i = 0; i < data.length; i++) {
 		
@@ -47,7 +74,7 @@ function updateBoard() {
 		
 		for(let n = 0; n < forRankData.length; n++) {
 			let rankTag 				= forRankData[n]["Tag"], 
-					rankImg 				= forRankData[n]["Image"], 
+					rankImg 				= forRankData[n]["Img"]["Loc"], 
 					playerRankData 	= tmpData["ForRank"];
 			
 			oldPlayers[oldPlayerKey].$item.find("."+rankTag.toLowerCase()+" > span").text(newPlayers[i].ForRank[rankTag]);
@@ -62,7 +89,8 @@ function updateBoard() {
 //更新名次
 function updateRanks(players) {
 	for(var i = 0; i < players.length; i++) {
-		players[i].$item.find(".rank").text(i + 1);	
+		var reRank = (i == 0) ? (i + 1) : ( i + Math.abs( descending(players[i-1], players[i]) ) );
+		players[i].$item.find(".rank").text(reRank);	
 	}
 }
 
@@ -87,17 +115,18 @@ function resetBoard() {
 		tempString += 	"<div class='rank'>" + (i + 1) + "</div>";
 		
 		tempString += 	"<div class='name'>";
-		tempString += 		"<img class='playerImg' src=\""+tmpData.Image+"\" alt=\""+tmpData.Name+"\">";
+		tempString += 		"<img class='playerImg' src=\""+tmpData.Image.Loc+"\" style = \"width: "+tmpData.Image.Width+"px; text-align: center;\" alt=\""+tmpData.Name+"\">";
 		tempString += 		"<span>" + tmpData.Name + "</span>";
 		tempString += 	"</div>";
 		
 		for(let n = 0; n < forRankData.length; n++) {
 			let rankTag = forRankData[n]["Tag"], 
-					rankImg = forRankData[n]["Image"], 
+					rankImg = forRankData[n]["Img"]["Loc"], 
+					rankWid = forRankData[n]["Img"]["Width"], 
 					playerRankData = tmpData["ForRank"];
 			
-			tempString += 	"<div class='"+rankTag.toLowerCase()+"'>";
-			tempString += 		"<img class='"+rankTag.toLowerCase()+"Img' src=\""+rankImg+"\" alt=\""+rankTag.toLowerCase()+"Img\">";
+			tempString += 	"<div class='rulesDiv'>";
+			tempString += 		"<img class='rankImg' src=\""+rankImg+"\" style = \"width: "+rankWid+"px; text-align: center;\" alt=\""+rankTag.toLowerCase()+"Img\">";
 			tempString += 		"<span>" + parseInt(playerRankData[rankTag]) + "</span>";
 			tempString += 	"</div>";
 		}
@@ -116,14 +145,16 @@ function resetBoard() {
 
 function ajax_getRankData () {
 	let rspData = [];
+	let code = "<?=$eventCode;?>";
 	console.log("ajax_getRankData");
 	$.ajax({
     type: "POST",
-    url: "./tools/ajax/ajax_getRankData.php",
-    dataType: "json",
+    url: "./tools/ajax/ajax_getRankData.php?code="+code,
+    dataType: "JSON",
 		async: false,
     success: function (response) {
 			console.log("success", typeof response);
+			console.log(response);
 			rspData = response;
     },
     error: function (thrownError) {
@@ -138,16 +169,118 @@ function ajax_getRankData () {
 
 
 
+/*------------------------------------------------------------*/
+//留存備份用
+/*
+//昇冪排序			//最原始 function ascension(a, b) 	{ return ( a.ForRank.Score > b.ForRank.Score ? 1 : -1); }
+//第一次修改		//	function ascension(a, b) 	{ return (a.ForRank.Score == b.ForRank.Score && a.ForRank.Star > b.ForRank.Star) ? 1 : ( a.ForRank.Score > b.ForRank.Score ? 1 : -1); }
+//最終決定型態	//	function ascension(a, b) 	{ return (a.ForRank.Score == b.ForRank.Score) ? 0 : ( a.ForRank.Score > b.ForRank.Score ? 1 : -1); }
+//降冪排序			//最原始 function descending(a, b) 	{ return ( a.ForRank.Score < b.ForRank.Score ? 1 : -1); }
+//第一次修改		//	function descending(a, b) { return (a.ForRank.Score == b.ForRank.Score && a.ForRank.Star < b.ForRank.Star) ? 1 : ( a.ForRank.Score < b.ForRank.Score ? 1 : -1); }
+//最終決定型態	//	function descending(a, b) { return (a.ForRank.Score == b.ForRank.Score) ? 0 : ( a.ForRank.Score < b.ForRank.Score ? 1 : -1); }
+*/
+/*
+//昇冪排序
+//function ascension(a, b) 	{ 
+//	return (a.ForRank.Score == b.ForRank.Score) ? 0 : ( a.ForRank.Score > b.ForRank.Score ? 1 : -1); 
+//}
+//降冪排序
+//function descending(a, b) {
+//	//return (a.ForRank.Score == b.ForRank.Score) ? 0 : ( a.ForRank.Score < b.ForRank.Score ? 1 : -1); 
+//	//			 (a.ForRank.Score == b.ForRank.Score && a.ForRank.Star < b.ForRank.Star) ? 1 : ( a.ForRank.Score < b.ForRank.Score ? 1 : -1);
+//	
+//	return -1;
+//	
+//	//以 PHP字串概略呈現的形式
+//	//echo "if(a.ForRank.".$data["rules"][$i]["Tag"]." < b.ForRank.".$data["rules"][$i]["Tag"];.") { ";
+//	//echo 	"return 1;";
+//	//echo "}";
+//	//echo "else if( a.ForRank.".$data["rules"][$i]["Tag"]." == b.ForRank.".$data["rules"][$i]["Tag"]." ) { ";
+//	//	
+//	//echo 	"if( a.ForRank.".$data["rules"][$i+1]["Tag"]." < b.ForRank.".$data["rules"][$i+1]["Tag"]." ) { ";
+//	//echo 		"return 1;";
+//	//echo 	"}";
+//	//echo 	"else if( a.ForRank.".$data["rules"][$i+1]["Tag"]." == b.ForRank.".$data["rules"][$i+1]["Tag"]." ) { ";
+//	//
+//	//echo		"if( a.ForRank.".$data["rules"][$i+2]["Tag"]." < b.ForRank.".$data["rules"][$i+2]["Tag"]." ) { ";
+//	//echo 			"return 1;";
+//	//echo 		"}";
+//	//echo 		"else if( a.ForRank.".$data["rules"][$i+2]["Tag"]." == b.ForRank.".$data["rules"][$i+2]["Tag"]." ) { ";
+//	//echo			"return 0;";
+//	//echo 		"}";
+//	//
+//	//echo 	"}";
+//	//
+//	//echo "}";
 
+//	//整理成容易遞迴的最終方式
+//	//if(a.ForRank.Score < b.ForRank.Score) {
+//	//	return 1;
+//	//}
+//	//else if( a.ForRank.Score == b.ForRank.Score ) {
+//	//	
+//	//	if( a.ForRank.Star < b.ForRank.Star ) {
+//	//		return 1;
+//	//	}
+//	//	else if( a.ForRank.Star == b.ForRank.Star )
+//	//	{
+//	//		if( a.ForRank.Cards < b.ForRank.Cards ) {
+//	//			return 1;
+//	//		}
+//	//		else if( a.ForRank.Cards == b.ForRank.Cards ) {
+//	//			return 0;
+//	//		}
+//	//	}
+//	//}
+//	//return -1;
 
+//	//概略整理後
+//	//if(a.ForRank.Score < b.ForRank.Score) {
+//	//	return 1;
+//	//}
+//	//else if( a.ForRank.Score == b.ForRank.Score ) {
+//	//	
+//	//	if( a.ForRank.Star < b.ForRank.Star ) {
+//	//		return 1;
+//	//	}
+//	//	else if( a.ForRank.Star == b.ForRank.Star )
+//	//	{
+//	//		if( a.ForRank.Cards < b.ForRank.Cards ) {
+//	//			return 1;
+//	//		}
+//	//		else if( a.ForRank.Cards == b.ForRank.Cards ) {
+//	//			return 0;
+//	//		}
+//	//		else {
+//	//			return -1;
+//	//		}
+//	//	}
+//	//	else {
+//	//		return -1;
+//	//	}
+//	//}
+//	//else {
+//	//	return -1;
+//	//}
 
-
-
-
-
-
-
-
+//	//最初的形式
+//	//if(a.ForRank.Score < b.ForRank.Score) {
+//	//	return 1;
+//	//}
+//	//else if( a.ForRank.Score == b.ForRank.Score && a.ForRank.Star < b.ForRank.Star ) {
+//	//	return 1;
+//	//}
+//	//else if( a.ForRank.Score == b.ForRank.Score && a.ForRank.Star == b.ForRank.Star && a.ForRank.Cards < b.ForRank.Cards ) {
+//	//	return 1;
+//	//}
+//	//else if( a.ForRank.Score == b.ForRank.Score && a.ForRank.Star == b.ForRank.Star && a.ForRank.Cards == b.ForRank.Cards ) {
+//	//	return 0;
+//	//}
+//	//else {
+//	//	return -1;
+//	//}
+//}
+*/
 
 
 /*------------------------------------------------------------*/
