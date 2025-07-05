@@ -8,6 +8,9 @@
 				$navigate_url = "./pages/dashboard.php";
 				break;
 			default:
+			case "product": 
+				$navigate_url = "./pages/product.php";
+				break;
 			case "listEvent": 
 				$navigate_url = "./pages/event/event_list.php";
 				break;

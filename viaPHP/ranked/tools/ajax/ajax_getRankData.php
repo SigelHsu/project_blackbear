@@ -9,11 +9,6 @@
 	$data["rules"] 		= fun_getEventRuleData($data["event"]["ID"]);			//獲取活動排序規則
 	$data["players"] 	= fun_getEventPlayerData($data["event"]["ID"]);		//獲取活動玩家資訊
 	
-	if( isset($_GET["tag"]) && ($_GET["tag"] == 1) ) {
-		echo json_encode($data["players"]);
-		exit();
-	}
-	
 	echo json_encode($data);
 	exit();
 	

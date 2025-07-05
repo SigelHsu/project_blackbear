@@ -29,6 +29,8 @@
 	<i class="fas fa-sync-alt" data-toggle = "tooltip" data-placement = "top" title = "重新排名"></i>
 </a>
 
+
+
 <script>
 	$(document).ready(function() {
 		$(".sticky-footer").addClass("d-none");
