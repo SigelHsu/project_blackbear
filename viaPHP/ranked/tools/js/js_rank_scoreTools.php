@@ -1,0 +1,165 @@
+let data_Rank;
+let timerId;
+let scoreToWin = 2000;
+let updateInterval = 2000;
+
+//昇冪排序
+function ascension(a, b) 	{ return (a.ForRank.Score == b.ForRank.Score && a.ForRank.Star > b.ForRank.Star) ? 1 : ( a.ForRank.Score > b.ForRank.Score ? 1 : -1); }
+//降冪排序，以 score先排序，然後是 star
+function descending(a, b) { return (a.ForRank.Score == b.ForRank.Score && a.ForRank.Star < b.ForRank.Star) ? 1 : ( a.ForRank.Score < b.ForRank.Score ? 1 : -1); }
+
+//調整相對高度...y為標題欄位的高度。(這邊應該可以調整，除了標題以外，還有各個欄位的高度)
+function reposition(data) {
+	$(".sticky-footer").addClass("d-none");
+	let height = $("#leaderboard .header").height();
+	let y = height;
+	for(var i = 0; i < data.length; i++) {
+		
+		data[i].$item.css("top", y + "px");
+		y += height;			
+	}
+}
+//尋找特定的Player	//https://stackoverflow.com/questions/11258077/how-to-find-index-of-an-object-by-key-and-value-in-an-javascript-array
+function getPlayerIndex(key) {
+	var index = data_Rank.players.findIndex(function(person) {
+				return person.ID == key
+			});
+	return index;
+}
+//更新排名版
+function updateBoard() {
+	let data_newRank 	= ajax_getRankDataNew(), 
+			forRankData 	= data_Rank["rules"], 
+			oldPlayers 		= data_Rank["players"]
+			newPlayers 		= data_newRank["players"];
+	for(let i = 0; i < newPlayers.length; i++) {
+		
+		let tmpData = newPlayers[i],
+				oldPlayerKey = getPlayerIndex(tmpData.ID);
+		
+		oldPlayers[oldPlayerKey].$item.find(".name > span").text(newPlayers.Name);
+		
+		for(let n = 0; n < forRankData.length; n++) {
+			let rankTag 				= forRankData[n]["Tag"], 
+					rankImg 				= forRankData[n]["Image"], 
+					playerRankData 	= tmpData["ForRank"];
+			
+			oldPlayers[oldPlayerKey].$item.find("."+rankTag.toLowerCase()+" > span").text(newPlayers[i].ForRank[rankTag]);
+		}
+		oldPlayers[oldPlayerKey].ForRank = newPlayers[i].ForRank;
+	}
+	
+	oldPlayers.sort(descending);				//根據昇冪或降冪進行排序，descending為降冪
+	updateRanks(oldPlayers);
+	reposition(oldPlayers);
+}
+//更新名次
+function updateRanks(players) {
+	for(var i = 0; i < players.length; i++) {
+		players[i].$item.find(".rank").text(i + 1);	
+	}
+}
+
+//重設排名版
+function resetBoard() {
+	let $list = $("#players");
+	
+	$list.find("li.player").remove();
+	if(timerId !== undefined) {
+		clearInterval(timerId);
+	}
+	
+	data_Rank = ajax_getRankData();
+	
+	let forRankData = data_Rank["rules"], 
+			data_Players = data_Rank["players"];						//console.log(data_Players.length, data_Players);
+	for(let i = 0; i < data_Players.length; i++) {
+		let tmpData = data_Players[i], tempString = "";		//console.log(i, tmpData);
+		
+		tempString += "<li class='player'>";
+		tempString += 	"<div class='rank'>" + (i + 1) + "</div>";
+		
+		tempString += 	"<div class='name'>";
+		tempString += 		"<img class='playerImg' src=\""+tmpData.Image+"\" alt=\""+tmpData.Name+"\">";
+		tempString += 		"<span>" + tmpData.Name + "</span>";
+		tempString += 	"</div>";
+		
+		for(let n = 0; n < forRankData.length; n++) {
+			let rankTag = forRankData[n]["Tag"], 
+					rankImg = forRankData[n]["Image"], 
+					playerRankData = tmpData["ForRank"];
+			
+			tempString += 	"<div class='"+rankTag.toLowerCase()+"'>";
+			tempString += 		"<img class='"+rankTag.toLowerCase()+"Img' src=\""+rankImg+"\" alt=\""+rankTag.toLowerCase()+"Img\">";
+			tempString += 		"<span>" + parseInt(playerRankData[rankTag]) + "</span>";
+			tempString += 	"</div>";
+		}
+		
+		tempString += "</li>";
+		
+		let $item = $(tempString);		//console.log($item);
+		data_Players[i].$item = $item;
+		$list.append($item);
+	}
+	
+	timerId = setInterval("updateBoard();", updateInterval);
+	reposition(data_Players);
+}
+
+/*這四個 function後續就用不到了*/
+//判斷比賽是否結束
+function isGameOver(score) {
+	return score >= scoreToWin;
+}
+//隨機選擇一名
+function getRandomPlayer() {
+	var index = getRandomBetween(0, data_Players.length);
+	return data_Players[index];
+}
+//隨機生成一個介於 50~150之間的點數
+function getRandomScoreIncrease() {
+	return getRandomBetween(50, 150);
+}
+//隨機生成一個介於 N~M之間的點數
+function getRandomBetween(minimum, maximum) {
+	 return Math.floor(Math.random() * maximum) + minimum;
+}
+
+/*//廢案...不知道原因，總是會自動更新順序，導致無法對應到正確的資料
+//更新排名版
+function updateBoard() {
+	console.log("data_Rank0 ", data_Rank);
+	let data_newRank 	= ajax_getRankDataNew(), 
+			forRankData = data_Rank["rules"], 
+			oldPlayers 	= data_Rank["players"]
+			newPlayers 	= data_newRank["players"];
+	for(let i = 0; i < oldPlayers.length; i++) {
+		let tmpData = newPlayers[i];
+		
+		console.log(oldPlayers[i], newPlayers[i]);
+		
+		oldPlayers[i].$item.find(".name > span").text(newPlayers.Name);
+		
+		for(let n = 0; n < forRankData.length; n++) {
+			let rankTag = forRankData[n]["Tag"], 
+					rankImg = forRankData[n]["Image"], 
+					playerRankData = tmpData["ForRank"];
+			
+			oldPlayers[i].$item.find("."+rankTag.toLowerCase()+" > span").text(newPlayers[i].ForRank[rankTag]);
+		}
+		
+		console.log(oldPlayers[i], oldPlayers[i].ForRank, newPlayers[i], newPlayers[i].ForRank);
+		oldPlayers[i].ForRank = newPlayers[i].ForRank;
+	}
+	console.log("data_Rank1 ", data_Rank);
+	console.log("data_Players ", data_Players);
+	var data_Players = oldPlayers;
+	data_Players.sort(descending);				//根據昇冪或降冪進行排序，descending為降冪
+	updateRanks(data_Players);
+	reposition(data_Players);
+	console.log("data_Rank2 ", data_Rank);
+	if(isGameOver(player.score)) {
+		resetBoard();	
+	}
+}
+*/

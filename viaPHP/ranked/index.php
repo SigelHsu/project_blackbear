@@ -1,35 +1,51 @@
-<html>
-	<head>
-		<!-- https://www.hitthebits.com/2012/05/animating-list-with-css3-transitions.html -->
-		
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
-		<link href="./tools/css/rank-style.css" rel="stylesheet">
-		<script src="./tools/js/rank-jsTools.js" type="text/javascript"></script>
-	</head>
-	
-	<body>
+<!DOCTYPE html>
+<html lang="en">
 
-		<div id="leaderboard">
-			<ul id="players">
-				<li class="header">
-					<div class="rank">Rank</div>
-					<div class="name">Player</div>
-					<div class="score">Score</div>
-					<div class="star">Star</div>
-					<div class="cards">Card</div>
-				</li>
-			</ul>
-		</div>
+	<head>
+		<?php require_once("./pages/common/headbar.php"); ?>
+	</head>
+
+	<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+			<!-- Sidebar -->
+			<?php require_once("./pages/common/sidebar.php"); ?>
+			<!-- End of Sidebar -->
+
+			<!-- Content Wrapper -->
+			<div id="content-wrapper" class="d-flex flex-column">
+
+				<!-- Main Content -->
+				<div id="content">
+
+					<!-- Topbar -->
+					<?php require_once("./pages/common/topbar.php"); ?>
+					<!-- End of Topbar -->
+
+					<!-- Begin Page Content -->
+					<?php require_once("./pages/common/main.php"); ?>
+					<!-- /.container-fluid -->
+
+				</div>
+				<!-- End of Main Content -->
+
+				<!-- Footer -->
+				<?php require_once("./pages/common/footbar.php"); ?>
+				<!-- End of Footer -->
+
+			</div>
+			<!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
 		
+		<!-- Scroll to Top Button-->
+		<a class="scroll-to-top rounded" href="#page-top">
+			<i class="fas fa-angle-up"></i>
+		</a>
+
 	</body>
-	
-	<foot>
-		<script type="text/javascript">
-			$( document ).ready(function() {
-				resetBoard();
-			});
-		</script>
-	</foot>
+
 </html>
