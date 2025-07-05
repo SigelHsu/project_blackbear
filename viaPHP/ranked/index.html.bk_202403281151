@@ -1,0 +1,161 @@
+<!-- https://www.hitthebits.com/2012/05/animating-list-with-css3-transitions.html -->
+<style type="text/css">
+	#leaderboard li {
+		font-family: sans-serif;
+		font-size: 12px;
+		line-height: 12px;
+	}
+	#leaderboard #players li {
+		display:block;
+		clear: both;
+		position: absolute;
+		width: 350px;
+		-moz-transition-duration: 1s;
+		-webkit-transition-duration: 1s;
+		-ms-transition-duration: 1s;
+	}
+	#leaderboard #players li.header {
+		font-weight: bold;
+		background-color: silver;
+		background: -moz-linear-gradient(top, #cedce7 0%, #596a72 100%);
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#cedce7), color-stop(100%,#596a72));
+	}
+	#leaderboard #players {
+		padding: 0;
+		width: 350px;
+		position: relative;
+		border: 1px solid #333;
+		box-shadow: 2px 2px 5px gray;
+		height: 132px;
+		background: -moz-linear-gradient(top, #cedce7 0%, #596a72 100%);
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#cedce7), color-stop(100%,#596a72));
+	}
+	#leaderboard #players div {
+		display: block;
+		float: left;
+		overflow: hidden;
+		padding: 5px;
+	}
+	#leaderboard .player {
+		background: -moz-linear-gradient(top, #feffff 0%, #e0dace 100%);
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#feffff), color-stop(100%,#e0dace));
+	}
+	#leaderboard .rank {
+		width: 50px;
+		text-align: center;
+	}
+	#leaderboard .name {
+		width: 150px;
+	}
+	#leaderboard .score {
+		width: 100px;
+		text-align: center;
+	}
+</style>
+
+<div id="leaderboard">
+	<ul id="players">
+		<li class="header">
+			<div class="rank">Rank</div>
+			<div class="name">Player</div>
+			<div class="score">Score</div>
+		</li>
+	</ul>
+</div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+
+<script language="javascript">
+	var players;
+	var timerId;
+	var scoreToWin = 2000;
+	var updateInterval = 2000;
+
+	//昇冪排序
+	function ascension(a, b) { return a.score > b.score ? 1 : -1; }
+	//降冪排序
+	function descending(a, b) { return a.score < b.score ? 1 : -1; }
+	
+	//調整相對高度...y為標題欄位的高度。(這邊應該可以調整，除了標題以外，還有各個欄位的高度)
+	function reposition() {
+		var height = $("#leaderboard .header").height();
+		var y = height;
+		for(var i = 0; i < players.length; i++) {
+			players[i].$item.css("top", y + "px");
+			y += height;			
+		}
+	}
+	//更新排名版
+	function updateBoard() {
+		var player = getRandomPlayer();	
+		player.score += getRandomScoreIncrease();
+		player.$item.find(".score").text(player.score);
+		
+		players.sort(descending);				//根據昇冪或降冪進行排序，descending為降冪
+		updateRanks(players);
+		reposition();
+		
+		if(isGameOver(player.score)) {
+			resetBoard();	
+		}
+	}
+	
+	//判斷比賽是否結束
+	function isGameOver(score) {
+		return score >= scoreToWin;
+	}
+	//隨機選擇一名
+	function getRandomPlayer() {
+		var index = getRandomBetween(0, players.length);
+		return players[index];
+	}
+	//隨機生成一個介於 50~150之間的點數
+	function getRandomScoreIncrease() {
+		return getRandomBetween(50, 150);
+	}
+	//隨機生成一個介於 N~M之間的點數
+	function getRandomBetween(minimum, maximum) {
+		 return Math.floor(Math.random() * maximum) + minimum;
+	}
+	
+	//更新名次
+	function updateRanks(players) {
+		for(var i = 0; i < players.length; i++) {
+			players[i].$item.find(".rank").text(i + 1);	
+		}
+	}
+
+	//重設排名版
+	function resetBoard() {
+		var $list = $("#players");
+		
+		$list.find("li.player").remove();
+		if(timerId !== undefined) {
+			clearInterval(timerId);
+		}
+		
+		players = [
+			{ name: "D35truXion", score: 500, star: 5 },
+			{ name: "Lithos", score: 400, star: 1 },
+			{ name: "baby.bumpkins", score: 300, star: 2 },
+			{ name: "SpreadsheetMan", score: 200, star: 3 },
+			{ name: "Eitz", score: 100, star: 4 }
+		];
+		for(var i = 0; i < players.length; i++) {
+			var $item = $(
+				"<li class='player'>" + 
+					"<div class='rank'>" + (i + 1) + "</div>" + 
+					"<div class='name'>" + players[i].name + "</div>" +
+					"<div class='score'>" + players[i].score + "</div>" +
+				"</li>");
+			players[i].$item = $item;
+			$list.append($item);
+		}
+		
+		timerId = setInterval("updateBoard();", updateInterval);
+		
+		reposition();
+	}	
+	
+	resetBoard();
+</script>
