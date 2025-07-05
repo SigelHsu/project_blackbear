@@ -165,7 +165,7 @@
 													'".$Subtitle_Info["Time"]."',
 													'".$Subtitle_Info["Info"]."',
 													'".json_encode($Subtitle_Info["Other"])."',
-													'1',
+													'2',
 													NOW(),
 													NOW()
 												);";

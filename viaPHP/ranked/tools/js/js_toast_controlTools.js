@@ -1,6 +1,6 @@
 //用來修改 Toast所的內容並展示
 function fun_showToastMessage (ipt_showInfo = {toastTime: "Just now", toastMsg: "New Message"}) {
-	console.log("fun_showToastMessage ", ipt_showInfo);
+	//console.log("fun_showToastMessage ", ipt_showInfo);
 	var tmp_toastContainer 	= document.getElementById('div_toastContainer');
 	var set_leftPosition 		= window.innerWidth - tmp_toastContainer.offsetWidth - 25;
 	tmp_toastContainer.style.position = 'absolute';
@@ -24,7 +24,7 @@ function fun_showToastMessage (ipt_showInfo = {toastTime: "Just now", toastMsg: 
 }
 
 function fun_throughToast2Local (ipt_throughInfo = {toastTime: "", toastMsg: ""}) {
-	console.log("fun_throughToast2Local ", ipt_throughInfo);
+	//console.log("fun_throughToast2Local ", ipt_throughInfo);
 	var toastInfo = {
 		toastTime: 	ipt_throughInfo.toastTime,
 		toastMsg: 	ipt_throughInfo.toastMsg

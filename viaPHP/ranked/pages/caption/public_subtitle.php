@@ -210,6 +210,12 @@
 		let tmp_subtitleKey = $("#div_subtitleList > div").length;
 		let tmp_insertHtml  = '';
 		
+		var cke_setting = {
+			"width": 			"<?=($data["caption"]["Setting"]["Board-Width"] != "") 	? ($data["caption"]["Setting"]["Board-Width"]."px") : "100%"; ?>",
+			"font-size": 	"<?=($data["caption"]["Setting"]["Font-Size"] != "") 		? ($data["caption"]["Setting"]["Font-Size"]."px")	 : "13px"; ?>",
+			"padding": 		"<?=($data["caption"]["Setting"]["Set-Padding"] != "") 	? (implode('px ', $data["caption"]["Setting"]["Set-Padding"]) . 'px')	 : "5px 5px 5px 5px"; ?>",
+		}
+		
 		const tmp_divCaption = document.getElementById("div_subtitleList");
 		// 檢查 div 是否存在
     if (!tmp_divCaption) {
@@ -260,8 +266,15 @@
 				tmp_divSubtitle.innerHTML = tmp_insertHtml;
 			
 				CKEDITOR.replace("ipt_editor_"+ipt_subInfo.Subtitle_ID, {
-					width: '1500px',  // 設置寬度
-					height: '100px'  // 設置高度
+					resize_dir: 'both', 									// 允許水平和垂直調整
+					width: 			cke_setting["width"],  		// 設置寬度
+					height: 		'100px',  								// 設置高度
+					contentsCss: 'body { font-size: '+cke_setting["font-size"]+'; padding: '+cke_setting["padding"]+'; } .cke_editable p { margin: 0 !important; padding: 0 !important; }',  // 設置字體大小和 padding
+					bodyClass: 	'style_customEditor',  		// 添加自定義類
+					resize_minWidth: 	150, 								// 設置最小寬度
+					resize_maxWidth: 	1500, 							// 設置最大寬度
+					resize_minHeight: 100, 								// 設置最小高度
+					resize_maxHeight: 1000 								// 設置最大高度
 				});
 				return;
 			}
@@ -286,8 +299,15 @@
 			tmp_divCaption.appendChild(newDiv);
 			
 			CKEDITOR.replace("ipt_editor_"+ipt_subInfo.Subtitle_ID, {
-				width: '1500px',  // 設置寬度
-				height: '100px'  // 設置高度
+				resize_dir: 'both', 									// 允許水平和垂直調整
+				width: 			cke_setting["width"],  		// 設置寬度
+				height: 		'100px',  								// 設置高度
+				contentsCss: 'body { font-size: '+cke_setting["font-size"]+'; padding: '+cke_setting["padding"]+'; } .cke_editable p { margin: 0 !important; padding: 0 !important; }',  // 設置字體大小和 padding
+				bodyClass: 	'style_customEditor',  		// 添加自定義類
+				resize_minWidth: 	150, 								// 設置最小寬度
+				resize_maxWidth: 	1500, 							// 設置最大寬度
+				resize_minHeight: 100, 								// 設置最小高度
+				resize_maxHeight: 1000 								// 設置最大高度
 			});
 		}
 	}

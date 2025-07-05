@@ -47,7 +47,6 @@
 		</a>
 		
 		<?php include_once("./pages/common/toast.php");	//掛載 toast的頁面 ?>
-
 	</body>
 
 </html>

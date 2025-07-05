@@ -47,12 +47,19 @@ function js_chgNavTab(target) {
 	$("div#page_edit div#div_"+target).removeClass("d-none");
 }
 
-function js_creCkeditorBox (target = "") {
+function js_creCkeditorBox (target = "", setting = {"width": "100%", "font-size": "13px", "padding": "1px 1px 1px 1px"} ) {
 	$(target).each(function() {
 		var tmp_textareaName = $(this).attr("id");
 		CKEDITOR.replace(tmp_textareaName, {
-			width: '1500px',  // 設置寬度
-			height: '100px'  // 設置高度
+			resize_dir: 'both', 									// 允許水平和垂直調整
+			width: 			setting["width"],  				// 設置寬度
+			height: 		'100px',  								// 設置高度
+			contentsCss: 'body { font-size: '+setting["font-size"]+'; padding: '+setting["padding"]+'; } .cke_editable p { margin: 0 !important; padding: 0 !important; }',  // 設置字體大小和 padding
+			bodyClass: 	'style_customEditor',  		// 添加自定義類
+			resize_minWidth: 	150, 								// 設置最小寬度
+			resize_maxWidth: 	1500, 							// 設置最大寬度
+			resize_minHeight: 100, 								// 設置最小高度
+			resize_maxHeight: 1000 								// 設置最大高度
 		});
 	});
 	
@@ -103,8 +110,17 @@ function ajax_addNewSubtitles() {
 			console.log("success", response);	//console.log(response);
 			rspData = response;
 			//alert("新增成功");
-			fun_throughToast2Local({toastMsg: "Added: " + tmp_subInfo});
-			location.reload();
+			
+			//這是原本的情況，會重新整理頁面，但說太麻煩
+			//fun_throughToast2Local({toastMsg: "Added: " + tmp_subInfo});
+			//location.reload();
+			
+			fun_showToastMessage({toastMsg: "Added: " + tmp_subInfo});
+			js_pushupSubtitleData(2);								//抓取最後的資料
+			//這邊還要把 CKeditor裡面的文字清空
+			if (CKEDITOR.instances.ipt_editor_New) {
+				CKEDITOR.instances.ipt_editor_New.setData('');
+			}
     },
     error: function (thrownError) {
       console.log("thrownError ", thrownError);
