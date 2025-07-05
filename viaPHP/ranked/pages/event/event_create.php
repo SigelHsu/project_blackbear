@@ -114,7 +114,7 @@
 							
 							<div class="row col-12 border-bottom">
 								<div class="form-group col-md-3">
-									<label for="inputNo">Event No <i class="fas fa-exclamation-circle" data-toggle="tooltip" data-placement="top" title="活動編號，系統生成，用以產生相關連結"></label>
+									<label for="inputNo">Event No <i class="fas fa-exclamation-circle" data-toggle="tooltip" data-placement="top" title="活動編號，系統生成，用以產生相關連結"></i></label>
 									<input type="text" class="form-control" id="inputNo" name="input[No]" value="" placeholder="(系統生成)" disabled />
 									<input type="hidden" class="input_ID" 	name="input[ID]" 		value = "0" />
 									<input type="hidden" class="input_No" 	name="input[No]" 		value = "" 	/>
@@ -131,7 +131,7 @@
 								
 								<div class="form-group col-8 p-0">
 									<div class="col-12">
-										<label">Font Setting</label>
+										<label>Font Setting</label>
 									</div>
 									<div class="d-flex">
 										<div class="col-md-4">
@@ -148,8 +148,8 @@
 								
 								<div class="form-group col-4 p-0">
 									<div class="col-12">
-										<label">Update Frequency <i class="fas fa-exclamation-circle" data-toggle="tooltip" data-placement="top" title="更新頻率，請輸入半形數字(0.1為1毫秒)"></i></label>
-										<input type="text" class="form-control" id="inputFontColor" 	name="input[Setting][Update-Frequency]" value="<?=$data["event"]["Setting"]["Update-Frequency"]; ?>"	placeholder="更新頻率" data-toggle="tooltip" data-placement="top" title="更新頻率" />
+										<label>Update Frequency <i class="fas fa-exclamation-circle" data-toggle="tooltip" data-placement="top" title="更新頻率，請輸入半形數字(0.1為1毫秒)"></i></label>
+										<input type="text" class="form-control" id="inputFrequency" name="input[Setting][Update-Frequency]" value="<?=$data["event"]["Setting"]["Update-Frequency"]; ?>"	placeholder="更新頻率" data-toggle="tooltip" data-placement="top" title="更新頻率" />
 									</div>
 								</div>
 							</div>
@@ -349,7 +349,7 @@
 							<div class="row align-items-center col-md-12 border-bottom mt-2 ml-1">
 								<div class="row col-md-12">
 									<div class="form-group col-md-9 col-sm-9">
-										<label>Player <i class="fas fa-exclamation-circle" data-toggle="tooltip" data-placement="top" title="要展示的玩家名稱"></label>
+										<label>Player <i class="fas fa-exclamation-circle" data-toggle="tooltip" data-placement="top" title="要展示的玩家名稱"></i></label>
 										<input type="text" class="form-control" name="input[Player][Name][]" value = "<?=$player_Value["Name"]; ?>" placeholder="玩家稱謂" data-toggle="tooltip" data-placement="top" title="玩家稱謂" />
 										<input type="hidden" name="input[Player][Ranked_ID][]" 	value="0" />
 										<input type="hidden" name="input[Player][ID][]" 				value="0" />

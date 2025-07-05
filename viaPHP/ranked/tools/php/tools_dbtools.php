@@ -90,6 +90,7 @@
 		$result = fun_getDBData($sql);		//print_r($result); exit();
 		return $result;
 	}
+
 	//獲取活動玩家資訊
 	function fun_getEventPlayerData($Event_ID = "") {
 		$returnData = array();
@@ -128,4 +129,92 @@
 		return $returnData;
 	}
 
+	//獲取計數器資料
+	function fun_getCountersData($arySch = array()) {
+		$Counter_ID 	= (isset($arySch["ID"])) 		? ($arySch["ID"]) 	: ("");
+		$Counter_No 	= (isset($arySch["No"])) 		? ($arySch["No"]) 	: ("");
+		$Counter_Code = (isset($arySch["Code"])) 	? ($arySch["Code"]) : ("");
+		$returnData = array();
+		$sql = "SELECT Counter_ID 		AS Counter_ID, 
+									 Counter_No 		AS Counter_No, 
+									 Counter_Code 	AS Counter_Code, 
+									 Counter_Title 	AS Counter_Title,
+									 Target_API 		AS Target_API,
+									 Grab_Frequency AS Grab_Frequency,
+									 Setting 				AS Setting,
+									 Status 				AS Status,
+									 Create_Date 		AS Create_Date,
+									 Modify_Date 		AS Modify_Date
+							FROM tb_counter ";
+		$result = fun_getDBData($sql);
+		return $result;
+	}
+	
+	//獲取單一計數器資料
+	function fun_getCounterData($arySch = array()) {
+		$Counter_ID 	= (isset($arySch["ID"])) 		? ($arySch["ID"]) 	: ("");
+		$Counter_No 	= (isset($arySch["No"])) 		? ($arySch["No"]) 	: ("");
+		$Counter_Code = (isset($arySch["Code"])) 	? ($arySch["Code"]) : ("");
+		$returnData = array();
+		$sql = "SELECT Counter_ID 		AS Counter_ID, 
+									 Counter_No 		AS Counter_No, 
+									 Counter_Code 	AS Counter_Code, 
+									 Counter_Title 	AS Counter_Title,
+									 Target_API 		AS Target_API,
+									 Grab_Frequency AS Grab_Frequency,
+									 Setting 				AS Setting,
+									 Status 				AS Status,
+									 Create_Date 		AS Create_Date,
+									 Modify_Date 		AS Modify_Date
+							FROM tb_counter 
+						 WHERE ( Counter_No 	= '".$Counter_No."' 
+									OR Counter_Code = '".$Counter_Code."'
+								 ) ";
+		$result = fun_getDBData($sql);
+		if( count($result) > 0) {
+			$getData = $result[0];
+			$returnData = array( 
+				"ID" 							=> $getData["Counter_ID"],
+				"No" 							=> $getData["Counter_No"],
+				"Code" 						=> $getData["Counter_Code"],
+				"Title" 					=> $getData["Counter_Title"],
+				"Target_API"			=> $getData["Target_API"],
+				"Grab_Frequency" 	=> $getData["Grab_Frequency"],
+				"Setting"					=> json_decode($getData["Setting"], true),
+				"Status"					=> $getData["Status"],
+			);
+		}
+		return $returnData;
+	}
+	//獲取紀錄的計數器資訊
+	function fun_getGrabInfoData($Counter_ID = "") {
+		$returnData = array();
+		$sql = "SELECT tb_grabinfo.GrabInfo_ID 		AS GrabInfo_ID, 
+									 tb_grabinfo.Counter_ID 		AS Counter_ID,
+									 tb_grabinfo.Grab_Values 		AS Grab_Values,
+									 tb_grabinfo.Grab_Info 			AS Grab_Info,
+									 tb_grabinfo.Status 				AS Status, 
+									 tb_grabinfo.Create_Date 		AS Create_Date,
+									 tb_grabinfo.Modify_Date 		AS Modify_Date
+							FROM tb_grabinfo
+						 WHERE Counter_ID = '".$Counter_ID."' 
+					ORDER BY GrabInfo_ID DESC ";
+		$result = fun_getDBData($sql);		//print_r($result); exit();
+		
+		if( count($result) > 0) {
+			foreach($result AS $Key => $Values) {
+				
+				$returnData[$Key] = array( 
+					"GrabInfo_ID" 	=> $Values["GrabInfo_ID"],
+					"Counter_ID" 		=> $Values["Counter_ID"],
+					"Grab_Values" 	=> $Values["Grab_Values"],
+					"Grab_Info" 		=> json_decode($Values["Grab_Info"], true),
+					"Status" 				=> $Values["Status"],
+					"Create_Date"		=> $Values["Create_Date"],
+					"Modify_Date"		=> $Values["Modify_Date"]
+				);
+			}
+		}
+		return $returnData;
+	}
 ?>

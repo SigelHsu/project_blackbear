@@ -26,6 +26,22 @@
 			case "scoreBoard": 
 				$navigate_url = "./pages/event/event_scoreBoard.php";
 				break;
+				
+			case "listCount":
+				$navigate_url = "./pages/count/counter_list.php";
+				break;
+			case "newCount": 
+				$navigate_url = "./pages/count/counter_create.php";
+				break;
+			case "editCount": 
+				$navigate_url = "./pages/count/counter_edit.php";
+				break;
+			case "scoreCount": 
+				$navigate_url = "./pages/count/counter_score.php";
+				break;
+			case "jumpCount":
+				$navigate_url = "./pages/count/jump_counter.php";
+				break;
 		}
 		
 		require_once($navigate_url); 

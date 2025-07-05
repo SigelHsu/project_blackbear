@@ -37,6 +37,7 @@
 	</li>
 
 	<!-- Nav Item - Utilities Collapse Menu -->
+	<!--
 	<li class="nav-item">
 		<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTeams"
 			 aria-expanded="true" aria-controls="collapseTeams">
@@ -52,12 +53,13 @@
 			</div>
 		</div>
 	</li>
+	-->
 
 	<!-- Nav Item - Pages Collapse Menu -->
 	<li class="nav-item">
-		<a class="nav-link collapsed" href="buttons.html" >
-			<i class="fas fa-fw fa-cog"></i>
-			<span>隊伍 Teams</span>
+		<a class="nav-link collapsed" href="./index.php?loc=listCount" >
+			<i class="fas fa-fw fa-flag"></i>
+			<span>跳號 Counters</span>
 		</a>
 	</li>
 </ul>
