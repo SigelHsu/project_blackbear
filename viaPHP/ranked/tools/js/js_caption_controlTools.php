@@ -99,7 +99,7 @@ function ajax_addNewSubtitles() {
 	if( tmp_subInfo == "" ) {
 		return false;
 	}
-	
+	//console.log("tmp_subInfo: ", tmp_subInfo);
 	$.ajax({
     type: "POST",
     url: "./tools/ajax/ajax_updSubtitlesInfo.php",
@@ -115,7 +115,7 @@ function ajax_addNewSubtitles() {
 			//fun_throughToast2Local({toastMsg: "Added: " + tmp_subInfo});
 			//location.reload();
 			
-			fun_showToastMessage({toastMsg: "Added: " + tmp_subInfo});
+			fun_showToastMessage({toastMsg: "Added: " + tmp_subInfo.value});
 			js_pushupSubtitleData(4);								//抓取最後的資料
 			//這邊還要把 CKeditor裡面的文字清空
 			if (CKEDITOR.instances.ipt_editor_New) {
