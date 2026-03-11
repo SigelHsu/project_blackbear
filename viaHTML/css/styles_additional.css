@@ -79,11 +79,9 @@
   background-size: 70% 70%;
   filter: invert(1);
 }
-
 .carousel-indicators button {
   background-color: #999;
 }
-
 .carousel-indicators .active {
   background-color: #FF4081;
 }
@@ -94,7 +92,6 @@
   overflow:hidden;
   border-radius:8px;
 }
-
 .media-box img,
 .media-box video{
   width:100%;
@@ -107,4 +104,48 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+.navbar,
+#mainNav.navbar-shrink {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.carousel-indicators {
+	bottom: 0rem;
+}
+.carousel-indicators [data-bs-target] {
+	opacity: 0.25;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin: 0 4px;
+  box-shadow: 0 0 0px rgba(0, 0, 0, 0.5);
+	transform: scale(0.9);
+  transition: all 0.3s ease;
+}
+.carousel-indicators .active {
+  opacity: 1;
+}
+.carousel-control-prev {
+  left: -4rem;
+}
+.carousel-control-next {
+  right: -4rem;
+}
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: invert(90%) sepia(100%) saturate(800%) hue-rotate(320deg) brightness(1.2);
+}
+@media (min-width: 992px) {
+	.carousel-indicators {
+		bottom: -2rem;
+	}
+	.carousel-control-prev {
+		left: -8rem;
+	}
+	.carousel-control-next {
+		right: -8rem;
+	}
+
 }

@@ -76,11 +76,6 @@ hr {
 	transition: color 0.3s;
 }
 
-.navbar,
-#mainNav.navbar-shrink {
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
 .btn-primary {
   background-color: var(--color-primary);
   border-color: var(--color-primary);
@@ -110,44 +105,8 @@ a:hover {
   background-color: var(--color-secondary);
 }
 
-.carousel-indicators {
-	bottom: 0rem;
-}
 .carousel-indicators [data-bs-target] {
   background-color: var(--color-primary);
-	opacity: 0.25;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  margin: 0 4px;
-  box-shadow: 0 0 0px rgba(0, 0, 0, 0.5);
-	transform: scale(0.9);
-  transition: all 0.3s ease;
-}
-.carousel-indicators .active {
-  opacity: 1;
-}
-.carousel-control-prev {
-  left: -4rem;
-}
-.carousel-control-next {
-  right: -4rem;
-}
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-  filter: invert(90%) sepia(100%) saturate(800%) hue-rotate(320deg) brightness(1.2);
-}
-@media (min-width: 992px) {
-	.carousel-indicators {
-		bottom: -2rem;
-	}
-	.carousel-control-prev {
-		left: -8rem;
-	}
-	.carousel-control-next {
-		right: -8rem;
-	}
-
 }
 
 .about-section {
@@ -158,7 +117,6 @@ a:hover {
     var(--color-setAbout--dark) 100% 
   );
 }
-
 
 .contact-section .card hr {
   border-color: var(--color-accent);
