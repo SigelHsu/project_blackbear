@@ -139,7 +139,7 @@
 }
 @media (min-width: 992px) {
 	.carousel-indicators {
-		bottom: -2rem;
+		bottom: -3rem;
 	}
 	.carousel-control-prev {
 		left: -8rem;
