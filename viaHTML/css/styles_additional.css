@@ -1,0 +1,110 @@
+@charset "UTF-8";
+
+/*-----側邊懸浮選單區-----*/
+.floating-menu {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.floating-menu::before {
+  content: "";
+  position: absolute;
+  top: -20px;
+  bottom: -20px;
+  left: -20px;
+  right: -20px;
+}
+
+.menu-btn {
+  border-radius: 10px;
+  padding: 0.5rem 0.3rem;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.5s;
+}
+
+.menu-items {
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  transition: all 0.5s;
+}
+
+.floating-menu:hover .menu-items {
+  opacity: 1;
+  width: 200px; /* 展開寬度 */
+  margin-left: 0.5rem;
+}
+
+.menu-items a {
+  padding: 0.5rem 0.5rem;
+  background: #f8f9fa;
+  margin: 0.2rem 0;
+  border-radius: 0.25rem;
+  text-decoration: none;
+  color: #333;
+}
+
+/* 初始文字垂直 */
+.menu-btn .btn-text {
+  writing-mode: vertical-rl; /* 文字從上到下 */
+  /*transform: rotate(180deg); /* 如果想從下到上可以調整 */
+  transition: all 0.5s;
+  /*margin-left: 0.5rem;*/
+}
+
+/* hover 變水平 */
+.floating-menu:hover .menu-btn .btn-text {
+  writing-mode: horizontal-tb; /* 水平 */
+  transform: rotate(0deg);
+}
+.floating-menu:hover .menu-btn {
+	padding: 0.3rem 0.5rem;
+}
+
+/*-----Projects展示區-----*/
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-size: 70% 70%;
+  filter: invert(1);
+}
+
+.carousel-indicators button {
+  background-color: #999;
+}
+
+.carousel-indicators .active {
+  background-color: #FF4081;
+}
+
+.media-box{
+  width:100%;
+  aspect-ratio:16/9;
+  overflow:hidden;
+  border-radius:8px;
+}
+
+.media-box img,
+.media-box video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.project-text{
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

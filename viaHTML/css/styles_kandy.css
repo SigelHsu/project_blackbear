@@ -1,0 +1,165 @@
+@charset "UTF-8";
+:root {
+  --color-primary: 		#F06292;      /* 柔桃色 */
+  --color-secondary: 	#C2185B;    	/* 深桃紅 */
+  --color-accent: 		#E6C78B;      /* 香檳金 */
+  --color-bg: 				#FFF6F8;      /* 淺粉背景 */
+
+  --color-about-words: 			rgba(0,0,0,0.8);
+
+  --color-setAbout-darker: 	rgba(194, 24, 91, 0.9);
+  --color-setAbout-dark: 		rgba(240, 98, 146, 0.8);
+}
+
+body {
+  background-color: var(--color-bg);
+}
+hr {
+	border-color: var(--color-accent);
+}
+
+#mainNav {
+  background-color: var(--color-secondary);
+}
+#mainNav .navbar-toggler {
+  color: var(--bs-teal);
+  border: 1px solid var(--bs-teal);
+}
+#mainNav .navbar-brand {
+  color: var(--color-accent);
+}
+#mainNav .navbar-nav .nav-item:hover {
+  color: fade(var(--bs-white), 80%);
+}
+@media (min-width: 992px) {
+  #mainNav .navbar-brand {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  #mainNav .nav-link {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  #mainNav .nav-link:hover {
+    color: rgba(255, 255, 255, 0.75);
+  }
+  #mainNav .nav-link:active {
+    color: #fff;
+  }
+  #mainNav.navbar-shrink {
+    background-color: #fff;
+  }
+  #mainNav.navbar-shrink .navbar-brand {
+    color: #000;
+  }
+  #mainNav.navbar-shrink .nav-link {
+    color: #000;
+  }
+  #mainNav.navbar-shrink .nav-link:hover {
+    color: var(--color-secondary);
+  }
+  #mainNav.navbar-shrink .nav-link:active {
+    color: var(--color-primary);
+  }
+  #mainNav.navbar-shrink .nav-link.active {
+    color: var(--color-secondary);
+    border-bottom: 0.25rem solid var(--color-secondary);
+  }
+}
+
+.navbar {
+  background-color: var(--color-primary);
+}
+.navbar .nav-link {
+  color: white;
+}
+.navbar .nav-link:hover {
+  color: var(--color-accent);
+	transition: color 0.3s;
+}
+
+.navbar,
+#mainNav.navbar-shrink {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+.btn-primary:hover {
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
+}
+
+a {
+  color: var(--color-secondary);
+}
+a:hover {
+  color: var(--color-accent);
+}
+
+.card {
+  border: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.menu-btn {
+  background-color: var(--color-primary);
+}
+.menu-btn:hover {
+	color: var(--color-accent);
+  background-color: var(--color-secondary);
+}
+
+.carousel-indicators {
+	bottom: 0rem;
+}
+.carousel-indicators [data-bs-target] {
+  background-color: var(--color-primary);
+	opacity: 0.25;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin: 0 4px;
+  box-shadow: 0 0 0px rgba(0, 0, 0, 0.5);
+	transform: scale(0.9);
+  transition: all 0.3s ease;
+}
+.carousel-indicators .active {
+  opacity: 1;
+}
+.carousel-control-prev {
+  left: -4rem;
+}
+.carousel-control-next {
+  right: -4rem;
+}
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: invert(90%) sepia(100%) saturate(800%) hue-rotate(320deg) brightness(1.2);
+}
+@media (min-width: 992px) {
+	.carousel-indicators {
+		bottom: -2rem;
+	}
+	.carousel-control-prev {
+		left: -8rem;
+	}
+	.carousel-control-next {
+		right: -8rem;
+	}
+
+}
+
+.about-section {
+  background: linear-gradient(
+    to bottom,
+    var(--color-secondary) 0%, 
+    var(--color-setAbout--darker) 75%, 
+    var(--color-setAbout--dark) 100% 
+  );
+}
+
+
+.contact-section .card hr {
+  border-color: var(--color-accent);
+}
